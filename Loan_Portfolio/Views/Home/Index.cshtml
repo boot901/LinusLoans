@@ -1,0 +1,95 @@
+﻿@model Loan_Portfolio.Models.SearchModel
+@using(Html.BeginForm("Index","Home",FormMethod.Post)){
+<div class="bar">
+	<div class="side-bar"><h3 class="centerText">Allen &amp; Overy</h3></div> <h3 class="centerText">Loan Portfolio Reports</h3>
+            <div class="maindiv">
+                <div class="sliderdiv">
+                    <a class="buttonC" href="@Url.Action("Index","FormMaker")"><img src="Content/Form.png" height="50px" width="35px"><h9 class="imgtrans">New form</h9></a>
+                     <a class="buttonC"><img src="Content/Cog.png" height="50px" width="50px"><h9 class="imgtrans">Form settings</h9></a>
+
+                     <button id="searcher" class="search"><img src="Content/search.png" width="32px" height="32px"></button>
+                     @Html.TextBoxFor(m=>m.searcher,new {@class = "search"})
+                    
+
+
+                     
+                    
+                </div>
+                 
+                <div class="optionbar">
+                     @Html.DropDownListFor(m=>m.numpage,new SelectList(new int[]{20,25,30,35}),new {@class="numperpage"})
+                <p class="lol float-left" >Items per page</p>
+                
+                
+                <div class="form-hori-right">
+                    Status:@Html.RadioButtonFor(m=>m.approval,"All", new {@checked="checked"})All
+                    @Html.RadioButtonFor(m=>m.approval,"Approved")Approved
+                    @Html.RadioButtonFor(m=>m.approval,"Not Approved")Not Approved
+                   
+                       
+                </div>
+                
+                @Html.DropDownListFor(m=>m.groups,new SelectList(new string[]{"In Group","All Groups"}),new {@class="float-right Usertype"})
+                <h4 class="float-right">Users: </h4>
+                </div>
+                <table class="tab" id="table">
+                    <tr class="tab">
+                        <th>Date modified</th>
+                        <th>LPR file name</th>
+                        <th>Status</th>
+                        <th style="width:300px;">Action</th>
+						
+                    </tr>
+			@if(@ViewData["searchy"]!=null){
+					for (var i=0;i<@ViewBag.list.Count;i++) {
+						
+
+						if((@ViewBag.list[i].settings.Docname.Contains(@ViewData["searchy"].ToString())&&@ViewBag.app.Equals("All"))){
+
+							<tr class="tab">
+							<td>@ViewBag.list[i].OrigDate</td>
+							<td>@ViewBag.list[i].settings.Docname</td>
+							<td>@ViewBag.list[i].settings.status</td>
+									
+							<td>
+
+							<div class="icons">
+							<a style="background:none;" href="@Url.Action("Viewer","FormMaker",new {idNum=@i})">
+							<img src="Content/eyes.png" width="40" height="20" >
+							</a>
+							<span class="tooltip">View</span>
+							</div>
+							<div class="icons">
+							<a style="background:none;">
+							<img src="Content/duplicate2.png" width="20" height="30">
+							</a>
+							<span class="tooltip">Edit document</span>
+							</div>
+							<div class="icons">
+							<a style="background:none;">
+							<img src="Content/duplicate.png" width="20" height="30">
+							</a>
+							<span class="tooltip">Duplicate document</span>
+							</div>
+
+
+							</td>
+
+
+
+
+						</tr>
+						}
+					}}
+
+							
+                </table>
+            </div>
+        
+        
+        </div>
+   
+   <img id="eye" src="Content/eyes.png" class="hider">
+       <img id="duplicate1" src="Content/duplicate.png" class="hider">
+           <img id="duplicate2" src="Content/duplicate2.png" class="hider">
+  }

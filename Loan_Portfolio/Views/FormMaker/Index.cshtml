@@ -1,0 +1,1385 @@
+﻿
+
+
+
+@model Loan_Portfolio.Models.DocDetail
+
+
+@using(@Html.BeginForm("Table","FormMaker",FormMethod.Post)){
+
+<div class="bar"><div class="side-bar" style="margin-left:0px;"><h3 class="centerText">Allen &amp; Overy</h3></div> <h3 class="centerText">Loan Portfolio Reports</h3>
+       </div>
+       <div class="underbar">
+           <input value="Save" type="submit" class="save">
+           <a href="@Url.Action("Index","Home")" class="canc float-right" style="background:none;">Cancel</a>
+           @Html.DropDownListFor(m=>m.settings.status,new SelectList(new string[]{"Approved","Not Approved"}),new {@class="quessy"})
+           <span class="float-right" style="margin-top:18px;">Report Status:</span>
+           
+	
+       </div>
+       <div class="mainerdiv2" style="background-color:IndianRed;">
+       <div class="maindiv2">
+		 <div class="miniwindiv">
+		 	<div class="closebar">
+				<span class="centerText">Form Initiation</span> <img src="Content/Arrow.png" width="50" height="50" alt="expand or close overview">
+			</div>
+		
+			<div class="moo">
+			<h1 class="below">Security</h1>
+			@Html.TextBoxFor(m=>m.Security.p1,new {@class="below"})
+			@Html.TextBoxFor(m=>m.Security.p2,new {@class="below"})
+			@Html.TextBoxFor(m=>m.Security.p3,new {@class="below"})
+			@Html.TextBoxFor(m=>m.Security.p4,new {@class="below"})
+			@Html.TextBoxFor(m=>m.Security.p5,new {@class="below"})
+			<h1 class="below">Text Description*</h1>
+			@Html.TextAreaFor(m=>m.Security.Comment,new {@class="textar"})
+			</div>
+			</div>
+
+		
+           <div class="miniwindiv">
+               <div class="closebar">
+                   <span class="centerText">Overview</span> <img src="Content/Arrow.png" width="50" height="50" alt="expand or close overview" onclick="">
+			
+                       </div>
+		
+               <div class="moo" style="">
+                   <div class="sideline">1.1 Form Identification</div>
+                   
+                   <div style="height:250px;" class="sec">
+                       
+                       <div class="upside-form">
+                           <p>Allen &amp; Overy Client/Matter Number</p>
+                           @Html.TextBoxFor(m=>m.FormIdentification.AllenOveryCorM_Num,new {@class="bigger"})
+                               </div>
+                       <div class="upside-form">
+                           <p>Principal borrowers</p>
+                          	@Html.TextBoxFor(m=>m.FormIdentification.Principle_Borrow,new {@class="bigger"})
+                               </div>
+                       <div class="upside-form">
+                           <p>Relevant facility e.g. Senior,Junior etc.</p>
+                         	@Html.TextBoxFor(m=>m.FormIdentification.Relevant_Facility,new {@class="bigger"})
+                               </div>
+                   </div>
+                  
+                   
+                   <div class="sec" style="height:400px;">
+					 <div class="sideline">1.2 Initial lenders in the syndicate</div>
+						<div style="height:100%;" class="upside-form">
+                    	<p> Commonly used lenders </p>
+						<div style="background:white;overflow-x:hidden;overflow-y:scroll;float:left; height:129px;border:grey solid 1px; margin-bottom:10%;">
+
+						@for(int i=0; i<@ViewBag.lenderlist.Length;i++){
+							<div class="tingy" style="margin-bottom:12px;">
+							@Html.CheckBoxFor(m=>m.Common_Venders[@i],new {@id=@i, @class="checky"})
+							<label for="@i"><span class="checkerooo"></span>@ViewBag.lenderlist[i]</label>
+							</div>
+							}
+						</div>
+					
+					</div>
+					<div class="upside-form">
+					 <p>Enter Aditional Lenders</p>
+                     @Html.TextBoxFor(m=>m.AdditionalLenders,new {@class="bigger",@style="float:left"})
+                  
+					</div>
+				<div class="upside-form" style="">
+					 <p>Final Report Distribution List</p>
+                  				   @Html.TextBoxFor(m=>m.final_report_dist_list,new {@class="bigger"})
+
+					</div>
+				
+                   </div>
+			<div  style="height:250px;" class="sec">
+				 <div class="sideline">1.3 </div>
+				<div class="upside-form">
+					 <p>Principal sponsors (if any)</p>
+                    				@Html.TextBoxFor(m=>m.PSponsor,new {@class="bigger"})	
+                    
+					</div>
+				</div>
+			<div class="sec" style="height:250px;">
+			<div class="sideline">1.4 </div>
+				<div class="upside-form">
+					 <p>Original Date of making</p>
+									
+                    				@Html.TextBoxFor(m=>m.OrigDate,new {@class="bigger",@Value=@DateTime.Now.ToShortDateString()})
+
+                    
+					</div>
+				</div>
+			<div class="sec" style="height:250px;">
+				<div class="sideline">1.5 </div>
+				<div class="upside-form">
+					 <p>Date of most recent amendment / amendment and restatement (if different)</p>
+									
+                    				@Html.TextBoxFor(m=>m.Date,new {@class="bigger",@Value=@DateTime.Now.ToShortDateString()})
+
+                    
+					
+				</div>
+			</div>
+
+			<div ng-app="App">
+			<div class="sec2" id="tbl1">
+				<div class="sideline">1.6 </div>
+				<div>
+					 <p style="margin-left:3%">Total Commitments</p>
+						<div ng-controller="TableController">			
+                    	<table id="commitments" style="width=100%;">
+						<tbody >
+                    	<tr>
+						<th>Facility</th>
+						<th>Currency</th>
+						<th>Amount</th>	
+						</tr>
+					
+						<tr class="lol" ng-repeat="n in range(num) track by $index">
+							
+							<td> 
+								<a ng-click="RemoveRow()" style="background-color:IndianRed;position:absolute;">X</a>
+								<select id="Commit_{{$index}}__Facility" name="Commit[{{$index}}].Facility" style=""><option value="ko">ko</option>
+								<option value="lol">lol</option>
+								</select>	
+							</td>
+							<td>
+								<select id="Commit_{{$index}}__Currency" name="Commit[{{$index}}].Currency" style=""><option value="ko">ko</option>
+								<option value="lol">lol</option>
+								</select>	
+							</td>					
+							<td>
+								<input type="number" name="Commit[{{$index}}].Amount" id="Commit_{{$index}}__Amount">
+							</td>
+
+						</tr>
+
+						</tbody>
+						</table>
+						<button type="button" ng-click="AddRow()" class="save" style="width:30%;float:left;margin-left:35%;">Add commitement</button>
+						</div>
+
+				</div>
+			</div>
+				
+				<div class="sec2" id="tbl2">
+				<div class="sideline">1.7 </div>
+				<div class="">
+									
+					<div>
+					 <p style="margin-left:3%">Contacts</p>
+						<div ng-controller="TableController2">				
+                    	<table id="contacts" style="width=100%;">
+						<tbody >
+                    	<tr>
+						<th>Full Name</th>
+						<th>Role</th>
+						<th>Contact Number</th>	
+						</tr>
+						<tr class="lol" ng-repeat="n in range(num) track by $index">
+			
+							<td> 
+								<a ng-click="RemoveRow()" style="background-color:IndianRed;">X</a>
+								<input type="text" style="height:30px;" name="Contacts[{{$index}}].FullName" id="Contacts_{{$index}}__FullName">
+							</td>
+								<td>
+								<input type="text" style="height:30px;" name="Contacts[{{$index}}].Role" id="Contacts_{{$index}}__Role">
+									
+								</td>					
+							<td>
+								<input type="text" style="height:30px;" name="Contacts[{{$index}}].Contact" id="Contacts_{{$index}}__Contact">
+							</td >
+
+						</tr>
+
+						</tbody>
+						</table>
+							<button type="button" ng-click="AddRow()" class="save" style="width:30%;float:left;margin-left:35%;">Add contact</button>
+						</div>
+						</div>
+						
+
+                    
+					
+				</div>
+			</div>
+			</div>
+				<div class="sec" style="height:250px;">
+						<div class="sideline">1.8</div>
+						<div class="upside-form">
+						<p style="margin-left:3%">Is this file highly restricted<br> or matter price sensitive?</p>
+						<div>@Html.RadioButtonFor(m=>m.restricted,true)Yes</div>
+
+						<div>@Html.RadioButtonFor(m=>m.restricted,false)No</div>
+						</div>
+					</div>
+                   </div>
+				
+               </div>
+				<div class="miniwindiv" style="margin-bottom:2%;">
+					<div class="closebar" style="height:50px;padding-bottom:25px;">
+					<span class="centerText">Facilities</span><img src="Content/Arrow.png" width="50" height="50" alt="expand or close overview"> <span style="float:right; margin-top:30px;">Clause Ref</span>
+				</div>
+				<div class="moo" style="height:100%;">
+				<div class="sec" style="height:250px;">
+				<div class="sideline">2.1</div>
+				<table>
+					<tbody>
+
+						<tr>
+							<th>Facility</th>
+							<th>Type</th>
+							<th>Maturity</th>
+							<th>Currency</th>
+							<th>Amount</th>
+						</tr>
+						<tr class="lol">
+							<td>@Html.TextBoxFor(m=>m.Facilities.Facility)</td>
+							<td>@Html.TextBoxFor(m=>m.Facilities.Type)</td>
+							<td>@Html.TextBoxFor(m=>m.Facilities.Maturity)</td>
+							<td>@Html.DropDownListFor(m=>m.Facilities.Currency, new SelectList(new string[] {"DDD","AAA"}))</td>
+							<td><input type="number" name="Facilities.Amount" id="Facilities_Amount"></td>
+						</tr>
+					</tbody>
+				</table>
+				</div>
+
+		<div  style="height:250px;" class="sec">
+		 <div class="sideline">2.2 </div>
+			<p style="margin-left:3%;">Purpose Clause</p>
+			<div class="upside-form">
+       		@Html.TextBoxFor(m=>m.PurposeClause.OtherVar,new {@class="bigger"})	
+      		</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.PurposeClause.ClauseRef,"",new {@class="bigger"})
+			</div>	            
+		</div>
+
+		<div  style="height:250px;" class="sec">
+				 <div class="sideline">2.3 </div>
+					<p style="margin-left:3%;">What level of consent is required to approve an extension of maturity</p>
+				<div class="upside-form">
+					 
+       @Html.DropDownListFor(m=>m.consentlvl,new SelectList(new string[]{"my dad","my mom"}),new {@class="bigger"})	
+
+					</div>
+		</div>
+
+		<div  style="height:250px;" class="sec">
+				 <div class="sideline">2.4 </div>
+					<p style="margin-left:3%;">Extension options</p>
+				<div class="upside-form">
+					 
+       @Html.DropDownListFor(m=>m.extension,new SelectList(new string[]{"my dad","my mom"}),new {@class="bigger"})	
+
+					</div>
+		</div>
+		<div  style="height:250px;" class="sec">
+		 <div class="sideline">2.5 </div>
+			<p style="margin-left:3%;">Does the credit agreement contain interest rate floors(e.g. LIBOR may not be below zero)?</p>
+			<div class="upside-form">
+			<div>@Html.RadioButtonFor(m=>m.CreditToInterestRate.OtherVar,true, new {id="credittointeresttrue"})Yes</div>
+
+			@Html.RadioButtonFor(m=>m.CreditToInterestRate.OtherVar,false, new {id="credittointerestfalse"})No</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.CreditToInterestRate.ClauseRef,"",new {@class="bigger"})
+			</div>	</div>    
+
+
+		<div  style="height:250px;" class="sec">
+
+						
+		 <div class="sideline">2.6 </div>
+			<p style="margin-left:3%;">Is disposal a mandatory prepayment event?</p>
+			<div class="upside-form">
+			<div>@Html.RadioButtonFor(m=>m.DisposeMandatorPrepayment.OtherVar,true)Yes</div>
+
+			@Html.RadioButtonFor(m=>m.DisposeMandatorPrepayment.OtherVar,false)No</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.DisposeMandatorPrepayment.ClauseRef,"",new {@class="bigger"})
+		</div></div>	            
+		<div  style="height:250px;" class="sec">
+
+							
+		 <div class="sideline">2.7 </div>
+			<p style="margin-left:3%;">Is a change of control a mandatory prepayment event?</p>
+			<div class="upside-form">
+			<div>@Html.RadioButtonFor(m=>m.ChangeMandatorPrepayment.OtherVar,true)Yes</div>
+
+			@Html.RadioButtonFor(m=>m.ChangeMandatorPrepayment.OtherVar,false)No</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.ChangeMandatorPrepayment.ClauseRef,"",new {@class="bigger"})
+		</div></div>	
+		<div  style="height:250px;" class="sec">					
+		<div class="sideline">2.8 </div>
+			<p style="margin-left:3%;">Purpose Clause</p>
+			<div class="upside-form">
+			<div>@Html.RadioButtonFor(m=>m.CreditToTax_Gross_up.OtherVar,true)Yes</div>
+
+			@Html.RadioButtonFor(m=>m.CreditToTax_Gross_up.OtherVar,false)No</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.CreditToTax_Gross_up.ClauseRef,"",new {@class="bigger"})
+		</div></div>
+				<div  style="height:250px;" class="sec">
+		<div class="sideline">2.9 </div>
+			<p style="margin-left:3%;">Does the credit agreement contain a negative pledge?</p>
+			<div class="upside-form">
+			<div>@Html.RadioButtonFor(m=>m.CreditToNegPledge.OtherVar,true)Yes</div>
+
+			@Html.RadioButtonFor(m=>m.CreditToNegPledge.OtherVar,false)No</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.CreditToNegPledge.ClauseRef,"",new {@class="bigger"})
+		</div></div>
+		<div  style="height:250px;" class="sec">
+		<div class="sideline">2.10 </div>
+			<p style="margin-left:3%;">Does the credit agreement contain a restriction <br> on incurring financial indebtedness?</p>
+			<div class="upside-form">
+			<div>@Html.RadioButtonFor(m=>m.CreditToRestriction_IncurrringIndebtedness.OtherVar,true)Yes</div>
+
+			@Html.RadioButtonFor(m=>m.CreditToRestriction_IncurrringIndebtedness.OtherVar,false)No</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.CreditToRestriction_IncurrringIndebtedness.ClauseRef,"",new {@class="bigger"})
+		</div></div>
+		<div  style="vertical-align:top; height:500px;" class="sec">
+		<div class="sideline">2.11 </div>
+			<p style="margin-left:3%;">Does the credit agreement contain the following financiall covenants</p>
+
+			<ol type="a" style="">
+			<li class="liform">
+
+
+
+			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
+			<span style="">debt:EBITDA<br>(leverage)</span> 
+			<div>@Html.RadioButtonFor(m=>m.FinancialCovenants.debtLeverage.OtherVar,true,new {@style="clear:both;"})Yes</div>
+			<div>@Html.RadioButtonFor(m=>m.FinancialCovenants.debtLeverage.OtherVar,false,new {@style="clear:both;"})No</div>
+			</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.FinancialCovenants.debtLeverage.ClauseRef,"",new {@class="bigger"})
+			</div>
+
+				</li>
+			<li class="liform">
+
+
+
+			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
+			<span style="">EBITDA:interest<br>(interest cover)?</span> 
+			<div>@Html.RadioButtonFor(m=>m.FinancialCovenants.interestCover.OtherVar,true,new {@style="clear:both;"})Yes</div>
+			<div>@Html.RadioButtonFor(m=>m.FinancialCovenants.interestCover.OtherVar,false,new {@style="clear:both;"})No</div>
+			</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.FinancialCovenants.interestCover.ClauseRef,"",new {@class="bigger"})
+			</div>
+
+			</li>
+			<li class="liform">
+
+
+
+			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
+			<span style="">Cashflow:debt<br>service costs<br>(cashflow cover)</span> 
+			<div>@Html.RadioButtonFor(m=>m.FinancialCovenants.CashflowCover.OtherVar,true,new {@style="clear:both;"})Yes</div>
+			<div>@Html.RadioButtonFor(m=>m.FinancialCovenants.CashflowCover.OtherVar,false,new {@style="clear:both;"})No</div>
+			</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.FinancialCovenants.CashflowCover.ClauseRef,"",new {@class="bigger"})
+			</div>
+
+			</li>
+			<li class="liform">
+
+
+
+			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
+			<span style="">tangible net worth?<br>(leverage)</span> 
+			<div>@Html.RadioButtonFor(m=>m.FinancialCovenants.tangibleNetWorth.OtherVar,true,new {@style="clear:both;"})Yes</div>
+			<div>@Html.RadioButtonFor(m=>m.FinancialCovenants.tangibleNetWorth.OtherVar,false,new {@style="clear:both;"})No</div>
+			</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.FinancialCovenants.tangibleNetWorth.ClauseRef,"",new {@class="bigger"})
+			</div>
+
+			</li>
+			</ol>
+		</div>
+			<div  style="height:250px;" class="sec">					
+		<div class="sideline">2.12 </div>
+			<p style="margin-left:3%;">Does the credit agreement <br> contain any other financial covenants</p>
+			<div class="upside-form">
+			<div>@Html.RadioButtonFor(m=>m.MoreFinancialCovenants.OtherVar,true)Yes</div>
+
+			@Html.RadioButtonFor(m=>m.MoreFinancialCovenants.OtherVar,false)No</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.MoreFinancialCovenants.ClauseRef,"",new {@class="bigger"})
+		</div></div>
+			<div  style="vertical-align:top; height:2100px;" class="sec">
+		<div class="sideline">2.13 </div>
+			<p style="margin-left:3%;">Does the credit agreement contain obligations for the borrower to<br> provide the following to the agent/lenders:</p>
+
+			<ol type="a" style="">
+			<li class="liform">
+
+
+
+			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
+			<span style="">All documents dispatched by the borrower to<br> its shareholders or its creditors generally?</span> 
+			<div>@Html.RadioButtonFor(m=>m.ObligationCause.DocByBorrowToCreditors.OtherVar,true,new {@style="clear:both;"})Yes</div>
+			<div>@Html.RadioButtonFor(m=>m.ObligationCause.DocByBorrowToCreditors.OtherVar,false,new {@style="clear:both;"})No</div>
+			</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.ObligationCause.DocByBorrowToCreditors.ClauseRef,"",new {@class="bigger"})
+			</div>
+
+				</li>
+			<li class="liform">
+
+
+
+			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
+			<span style="">Details of any litigation, arbitration or administrative<br>proceedings?</span> 
+			<div>@Html.RadioButtonFor(m=>m.ObligationCause.DetailLitArbAdminProcess.OtherVar,true,new {@style="clear:both;"})Yes</div>
+			<div>@Html.RadioButtonFor(m=>m.ObligationCause.DetailLitArbAdminProcess.OtherVar,false,new {@style="clear:both;"})No</div>
+			</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.ObligationCause.DetailLitArbAdminProcess.ClauseRef,"",new {@class="bigger"})
+			</div>
+
+			</li>
+			<li class="liform">
+
+
+
+			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
+			<span style="">Notification of any default?</span> 
+			<div>@Html.RadioButtonFor(m=>m.ObligationCause.NotificAnyDefault.OtherVar,true,new {@style="clear:both;"})Yes</div>
+			<div>@Html.RadioButtonFor(m=>m.ObligationCause.NotificAnyDefault.OtherVar,false,new {@style="clear:both;"})No</div>
+			</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.ObligationCause.NotificAnyDefault.ClauseRef,"",new {@class="bigger"})
+			</div>
+
+			</li>
+			<li class="liform">
+
+
+
+			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
+			<span style="">Further information on request regarding the financial condition,<br> business or operations of any members of the group?</span> 
+			<div>@Html.RadioButtonFor(m=>m.ObligationCause.FurtherInfoRequestFinConBusOp.OtherVar,true,new {@style="clear:both;"})Yes</div>
+			<div>@Html.RadioButtonFor(m=>m.ObligationCause.FurtherInfoRequestFinConBusOp.OtherVar,false,new {@style="clear:both;"})No</div>
+			</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.PurposeClause.ClauseRef,"",new {@class="bigger"})
+			</div>
+
+			</li>
+						<li class="liform">
+
+
+
+			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
+			<span style="">Notification of any change in ownership/shareholding of the borrower?</span> 
+			<div>@Html.RadioButtonFor(m=>m.ObligationCause.NotificChngeOwnerOfBorrow.OtherVar,true,new {@style="clear:both;"})Yes</div>
+			<div>@Html.RadioButtonFor(m=>m.ObligationCause.NotificChngeOwnerOfBorrow.OtherVar,false,new {@style="clear:both;"})No</div>
+			</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.ObligationCause.NotificChngeOwnerOfBorrow.ClauseRef,"",new {@class="bigger"})
+			</div>
+
+			</li>
+			<li class="liform">
+
+
+
+			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
+			<span style="">Notification of any changes in the constitutive<br> documents of any obligor?</span> 
+			<div>@Html.RadioButtonFor(m=>m.ObligationCause.NotificChngeConstDocObligor.OtherVar,true,new {@style="clear:both;"})Yes</div>
+			<div>@Html.RadioButtonFor(m=>m.ObligationCause.NotificChngeConstDocObligor.OtherVar,false,new {@style="clear:both;"})No</div>
+			</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.ObligationCause.NotificChngeConstDocObligor.ClauseRef,"",new {@class="bigger"})
+			</div>
+
+			</li>
+			<li class="liform">
+
+
+
+			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
+			<span style="">Consolidated annual<br> financial statements?</span> 
+			<div>@Html.RadioButtonFor(m=>m.ObligationCause.ConsAnnualFinancialStatement.Bool.OtherVar,true,new {@style="clear:both;"})Yes</div>
+			<div>@Html.RadioButtonFor(m=>m.ObligationCause.ConsAnnualFinancialStatement.Bool.OtherVar,false,new {@style="clear:both;"})No</div>
+			</div>
+			<div class="upside-form" style="position:relative;bottom:70px;left:20%;">
+			<input type="number" class="bigger" id="ObligationCause_ConsAnnualFinancialStatement_Number" name="ObligationCause.ConsAnnualFinancialStatement.Number"></div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.ObligationCause.ConsAnnualFinancialStatement.Bool.ClauseRef,"",new {@class="bigger"})
+
+
+			</div>
+
+			</li>
+				<li class="liform">
+
+
+
+			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
+			<span style="">Consolidated semi-annual<br> financial statements?</span> 
+			<div>@Html.RadioButtonFor(m=>m.ObligationCause.ConsSemiAnnualFinancialStatement.Bool.OtherVar,true,new {@style="clear:both;"})Yes</div>
+			<div>@Html.RadioButtonFor(m=>m.ObligationCause.ConsSemiAnnualFinancialStatement.Bool.OtherVar,false,new {@style="clear:both;"})No</div>
+			</div>
+			<div class="upside-form" style="position:relative;bottom:70px;left:20%;">
+			<input type="number" class="bigger" id="ObligationCause_ConsSemiAnnualFinancialStatement_Number" name="ObligationCause.ConsSemiAnnualFinancialStatement.Number">
+			</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.ObligationCause.ConsSemiAnnualFinancialStatement.Bool.ClauseRef,"",new {@class="bigger"})
+
+
+			</div>
+
+			</li>
+					<li class="liform">
+
+
+
+			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
+			<span style="">Consolidated quarterly<br> financial statements</span> 
+			<div>@Html.RadioButtonFor(m=>m.ObligationCause.ConsQuartAnnualFinancialStatement.Bool.OtherVar,true,new {@style="clear:both;"})Yes</div>
+			<div>@Html.RadioButtonFor(m=>m.ObligationCause.ConsQuartAnnualFinancialStatement.Bool.OtherVar,false,new {@style="clear:both;"})No</div>
+			</div>
+			<div class="upside-form" style="position:relative;bottom:70px;left:20%;">
+			<input type="number" class="bigger" id="ObligationCause_ConsQuartAnnualFinancialStatement_Number" name="ObligationCause.ConsQuartAnnualFinancialStatement.Number">
+			</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.ObligationCause.ConsQuartAnnualFinancialStatement.Bool.ClauseRef,"",new {@class="bigger"})
+
+
+			</div>
+
+			</li>
+			<li class="liform">
+
+
+
+			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
+			<span style="">Consolidated monthly<br> financial statements?</span> 
+			<div>@Html.RadioButtonFor(m=>m.ObligationCause.ConsMonthAnnualFinancialStatement.Bool.OtherVar,true,new {@style="clear:both;"})Yes</div>
+			<div>@Html.RadioButtonFor(m=>m.CreditToInterestRate,false,new {@style="clear:both;"})No</div>
+			</div>
+			<div class="upside-form" style="position:relative;bottom:70px;left:20%;">
+			<input type="number" class="bigger" id="ObligationCause_ConsMonthAnnualFinancialStatement_Number" name="ObligationCause.ConsMonthAnnualFinancialStatement.Number">
+			</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.ObligationCause.ConsMonthAnnualFinancialStatement.Bool.ClauseRef,"",new {@class="bigger"})
+
+
+			</div>
+
+			</li>
+			<li class="liform">
+
+
+
+			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
+			<span style="">Unconsolidated annual<br> financial statements?</span> 
+			<div>@Html.RadioButtonFor(m=>m.ObligationCause.UnConsAnnualFinancialStatement.Bool.OtherVar,true,new {@style="clear:both;"})Yes</div>
+			<div>@Html.RadioButtonFor(m=>m.ObligationCause.UnConsAnnualFinancialStatement.Bool.OtherVar,false,new {@style="clear:both;"})No</div>
+			</div>
+			<div class="upside-form" style="position:relative;bottom:70px;left:20%;">
+			<input type="number" class="bigger" id="ObligationCause_UnConsAnnualFinancialStatement_Number" name="ObligationCause.UnConsAnnualFinancialStatement.Number"></div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.ObligationCause.UnConsAnnualFinancialStatement.Bool.ClauseRef,"",new {@class="bigger"})
+
+
+			</div>
+
+
+			</li>
+			<li class="liform">
+
+
+
+			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
+			<span style="">Unconsolidated semi-annual<br> financial statements?</span> 
+			<div>@Html.RadioButtonFor(m=>m.ObligationCause.UnConsSemiAnnualFinancialStatement.Bool.OtherVar,true,new {@style="clear:both;"})Yes</div>
+			<div>@Html.RadioButtonFor(m=>m.ObligationCause.UnConsSemiAnnualFinancialStatement.Bool.OtherVar,false,new {@style="clear:both;"})No</div>
+			</div>
+			<div class="upside-form" style="position:relative;bottom:70px;left:20%;">
+			<input type="number" class="bigger" id="ObligationCause_UnConsSemiAnnualFinancialStatement_Number" name="ObligationCause.UnConsSemiAnnualFinancialStatement.Number"></div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.ObligationCause.UnConsSemiAnnualFinancialStatement.Bool.ClauseRef,"",new {@class="bigger"})
+
+
+			</div>
+
+
+			</li>
+				<li class="liform">
+
+
+
+			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
+			<span style="">Unconsolidated quarterly <br> financial statements?</span> 
+			<div>@Html.RadioButtonFor(m=>m.ObligationCause.UnConsQuartAnnualFinancialStatement.Bool.OtherVar,true,new {@style="clear:both;"})Yes</div>
+			<div>@Html.RadioButtonFor(m=>m.ObligationCause.UnConsQuartAnnualFinancialStatement.Bool.OtherVar,false,new {@style="clear:both;"})No</div>
+			</div>
+			<div class="upside-form" style="position:relative;bottom:70px;left:20%;">
+			<input type="number" class="bigger" id="ObligationCause_UnConsQuartAnnualFinancialStatement_Number" name="ObligationCause.UnConsQuartAnnualFinancialStatement.Number"></div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.ObligationCause.UnConsQuartAnnualFinancialStatement.Bool.ClauseRef,"",new {@class="bigger"})
+
+
+			</div>
+
+			</li>
+				<li class="liform">
+
+
+
+			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
+			<span style="">Unconsolidated monthly<br> financial statements?</span> 
+			<div>@Html.RadioButtonFor(m=>m.ObligationCause.UnConsMonthAnnualFinancialStatement.Bool.OtherVar,true,new {@style="clear:both;"})Yes</div>
+			<div>@Html.RadioButtonFor(m=>m.ObligationCause.UnConsMonthAnnualFinancialStatement.Bool.OtherVar,false,new {@style="clear:both;"})No</div>
+			</div>
+			<div class="upside-form" style="position:relative;bottom:70px;left:20%;">
+			<input type="number" class="bigger" id="ObligationCause_UnConsMonthAnnualFinancialStatement_Number" name="ObligationCause.UnConsMonthAnnualFinancialStatement.Number"></div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.ObligationCause.UnConsMonthAnnualFinancialStatement.Bool.ClauseRef,"",new {@class="bigger"})
+
+
+			</div>
+
+			</li>
+			</ol>
+		</div>
+			<div  style="height:250px;" class="sec">
+
+							
+		 <div class="sideline">2.14</div>
+			<p style="margin-left:3%;">Is a failure to pay an event of default?</p>
+			<div class="upside-form">
+			<div>@Html.RadioButtonFor(m=>m.IsFailPayEvent,true)Yes</div>
+			<div>@Html.RadioButtonFor(m=>m.IsFailPayEvent,false)No</div>
+			
+			</div>
+			</div>	
+			<div  style="height:250px;" class="sec">	
+		
+		<div class="sideline">2.15 </div>
+			<p style="margin-left:3%;">Is there a material adverse change event of default</p>
+			<div class="upside-form">
+			<div>@Html.RadioButtonFor(m=>m.MaterialAdverseChangeEvent.OtherVar,true)Yes</div>
+
+			@Html.RadioButtonFor(m=>m.MaterialAdverseChangeEvent.OtherVar,false)No</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.MaterialAdverseChangeEvent.ClauseRef,"",new {@class="bigger"})
+		</div></div><!--this is a multiple choice -->
+		<div  style="height:250px;" class="sec">					
+		<div class="sideline">2.16 </div>
+			<p style="margin-left:3%;"></p>
+			<div class="upside-form">
+			<div>@Html.RadioButtonFor(m=>m.ProvCrossDefault_CrossAccel.OtherVar,"cross-default")Cross-default</div>
+
+			<div>@Html.RadioButtonFor(m=>m.ProvCrossDefault_CrossAccel.OtherVar,"cross-default_payment")Cross-default for payment, cross-acceleration for other defaults</div>
+			<div>@Html.RadioButtonFor(m=>m.ProvCrossDefault_CrossAccel.OtherVar,"cross-accel_default")cross-acceleration for all defaults</div>
+			<div>@Html.RadioButtonFor(m=>m.ProvCrossDefault_CrossAccel.OtherVar,"default")Default</div>
+			</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.ProvCrossDefault_CrossAccel.ClauseRef,"",new {@class="bigger"})
+		</div></div>
+			<div  style="height:250px;" class="sec">
+		 <div class="sideline">2.17 </div>
+			<p style="margin-left:3%;">What is the cross-default or cross acceleration threshold?</p>
+			<div class="upside-form" style="width:20%;">
+			 @Html.DropDownListFor(m=>m.CrossDefOrAccelThresh.Bool.OtherVar,new SelectList(new string[]{"my dad","my mom"}),new {@class="bigger",@style="margin-top:0;height:35px;"})	
+						</div>
+			<div class="upside-form">
+       		@Html.TextBoxFor(m=>m.CrossDefOrAccelThresh.STRING,new {@class="bigger",@style=""})	
+      		</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.CrossDefOrAccelThresh.Bool.ClauseRef,"",new {@class="bigger"})
+			</div>	            
+		</div>
+		<div  style="height:250px;" class="sec">	
+		
+		<div class="sideline">2.18 </div>
+			<p style="margin-left:3%;">Does the credit agreement contain a <br> 
+			set off clause in favour of the bank?</p>
+			<div class="upside-form">
+			<div>@Html.RadioButtonFor(m=>m.CAgrContClauseFavBank.OtherVar,true)Yes</div>
+
+			@Html.RadioButtonFor(m=>m.CAgrContClauseFavBank.OtherVar,false)No</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.CAgrContClauseFavBank.ClauseRef,"",new {@class="bigger"})
+		</div></div>
+			<div  style="height:250px;" class="sec">
+		 <div class="sideline">2.19 </div>
+			<p style="margin-left:3%;">Governing law of principal credit agreement:</p>
+			<div class="upside-form">
+       		@Html.TextBoxFor(m=>m.GovLawPrincCAgr,new {@class="bigger",@Value="English"})	
+      		</div>
+
+		</div>
+					<div  style="height:250px;" class="sec">
+		<div class="sideline">2.20 </div>
+			<p style="margin-left:3%;">Does the credit agreement provide for Arbitration></p>
+			<div class="upside-form">
+			<div>@Html.RadioButtonFor(m=>m.CAPArbitration.OtherVar,true)Yes</div>
+
+			@Html.RadioButtonFor(m=>m.CAPArbitration.OtherVar,false)No</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.CAPArbitration.ClauseRef,"",new {@class="bigger"})
+		</div></div>
+			<!--moo-->	
+			</div>
+
+	</div>					
+		<div class="miniwindiv" style="margin-bottom:2%;">
+					<div class="closebar">
+					<span class="centerText">Voting</span><img src="Content/Arrow.png" width="50" height="50" alt="expand or close overview"> <span style="float:right; margin-top:30px;">Clause Ref</span>
+				</div>
+				<div class="moo" style="height:100%;">
+				
+		<div  style="height:250px;" class="sec">
+		<div class="sideline">3.1 </div>
+			<p style="margin-left:3%;">Voting level for most decisions?</p>
+			<div class="upside-form">
+			<div>@Html.RadioButtonFor(m=>m.VoteOnPerameter.OtherVar,true)66<sup>2</sup>/<sub>3</sub></div>
+
+			@Html.RadioButtonFor(m=>m.VoteOnPerameter.OtherVar,false)No</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.PurposeClause.ClauseRef,"",new {@class="bigger"})
+		</div></div>
+		<div style="height:250px;" class="sec">
+		<div class="sideline">3.2 </div>
+			<p style="margin-left:3%;">Can a lender split its commitments/loans when voting?</p>
+			<div class="upside-form">
+			<div>@Html.RadioButtonFor(m=>m.LenderSplitCommitLoansVote.OtherVar,"Yes")Yes</div>
+			<div>@Html.RadioButtonFor(m=>m.LenderSplitCommitLoansVote.OtherVar,"No")No</div>
+			<div>@Html.RadioButtonFor(m=>m.LenderSplitCommitLoansVote.OtherVar,"not_stated")Not Stated</div>
+			</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.LenderSplitCommitLoansVote.ClauseRef,"",new {@class="bigger"})
+			</div>
+			</div>
+		<div style="height:250px;" class="sec">
+		<div class="sideline">3.2 </div>
+			<p style="margin-left:3%;">Details of split voting (if applicable):</p>
+			<div class="upside-form">
+			@Html.TextAreaFor(m=>m.SplitVoteDetail.OtherVar,new {@class="bigger",@style="height:100px;"})
+			</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.SplitVoteDetail.ClauseRef,"",new {@class="bigger"})
+		</div></div>
+		<div  style="height:250px;" class="sec">
+		<div class="sideline">3.4 </div>
+			<p style="margin-left:3%;">Can the hedge counterparties vote before enforcement?</p>
+			<div class="upside-form">
+			<div>@Html.RadioButtonFor(m=>m.HedgeBeforeEnf.OtherVar,true)Yes</div>
+
+			@Html.RadioButtonFor(m=>m.HedgeBeforeEnf.OtherVar,false)No</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.HedgeBeforeEnf.ClauseRef,"",new {@class="bigger"})
+		</div></div>
+		<div  style="height:250px;" class="sec">
+		<div class="sideline">3.5 </div>
+			<p style="margin-left:3%;">Can the hedge counterparties vote after enforcement?</p>
+			<div class="upside-form">
+			<div>@Html.RadioButtonFor(m=>m.HedgeAfterEnf.OtherVar,true)Yes</div>
+
+			@Html.RadioButtonFor(m=>m.HedgeAfterEnf.OtherVar,false)No</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.HedgeAfterEnf.ClauseRef,"",new {@class="bigger"})
+		</div></div>
+
+				</div>
+				</div>
+	<div class="miniwindiv" style="margin-bottom:2%;">
+			<div class="closebar" style="">
+			<span class="centerText" style="">Obligours</span><img src="Content/Arrow.png" width="50" height="50" alt="expand or close overview"> <span style="float:right; margin-top:30px;">Clause Ref</span>
+	</div>
+	<div class="moo" style="height:100%;">
+	<div style="height:210px;" class="sec">
+		<div class="sideline">4.1 </div>
+			<p style="margin-left:3%;">List the Obligours by<br>
+				name, Jurisdiction and wether they are a Borrower, Guarantor<br>
+				and/or Security,Provider on a new line for each below</p>
+			<div class="upside-form">
+			@Html.TextAreaFor(m=>m.ObligorNameJurJob.OtherVar,new {@class="bigger",@style="height:80px;"})
+			</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.ObligorNameJurJob.ClauseRef,"",new {@class="bigger"})
+		</div></div>
+	<div  style="height:250px;" class="sec">
+		<div class="sideline">4.2 </div>
+			<p style="margin-left:3%;">Do all guarantors guarantee all borrowings?</p>
+			<div class="upside-form">
+			<div>@Html.RadioButtonFor(m=>m.GuarantorsGuarantAllBorrow.OtherVar,true)Yes</div>
+
+			@Html.RadioButtonFor(m=>m.GuarantorsGuarantAllBorrow.OtherVar,false)No</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.GuarantorsGuarantAllBorrow.ClauseRef,"",new {@class="bigger"})
+		</div></div>
+	<div  style="height:250px;" class="sec">
+		<div class="sideline">4.3 </div>
+			<p style="margin-left:3%;">Does the agreement allow additional borrowers?</p>
+			<div class="upside-form">
+			<div>@Html.RadioButtonFor(m=>m.DoesAgreeAllowAddBorrow.OtherVar,true)Yes</div>
+
+			@Html.RadioButtonFor(m=>m.DoesAgreeAllowAddBorrow.OtherVar,false)No</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.DoesAgreeAllowAddBorrow.ClauseRef,"",new {@class="bigger"})
+		</div></div>
+		<div  style="height:250px;" class="sec">					
+		<div class="sideline">4.4</div>
+			<p style="margin-left:3%;">Consent level for additional borrowers in existing jurisdiction</p>
+			<div class="upside-form">
+			<div>@Html.RadioButtonFor(m=>m.ConsLvlAdditionBorrowersExstJur.OtherVar,"all")All lenders</div>
+
+			<div>@Html.RadioButtonFor(m=>m.ConsLvlAdditionBorrowersExstJur.OtherVar,"majority")Majority lender (66<sup>2</sup>/<sub>3</sub> %)</div>
+			<div>@Html.RadioButtonFor(m=>m.ConsLvlAdditionBorrowersExstJur.OtherVar,"none")None</div>
+			<div>@Html.RadioButtonFor(m=>m.ConsLvlAdditionBorrowersExstJur.OtherVar,"non standard")Non standard consent level<br>
+				(i.e. Not all lender or majority lender(66<sup>2</sup>/<sub>3</sub> %))</div>
+			</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.ConsLvlAdditionBorrowersExstJur.ClauseRef,"",new {@class="bigger"})
+		</div></div>
+		<div  style="height:250px;" class="sec">					
+		<div class="sideline">4.5 </div>
+			<p style="margin-left:3%;">Consent level for additional borrowers in new jurisdiction</p>
+			<div class="upside-form">
+			<div>@Html.RadioButtonFor(m=>m.ConsLvlAdditionBorrowersExstJur.OtherVar,"all")All lenders</div>
+
+			<div>@Html.RadioButtonFor(m=>m.ConsLvlAdditionBorrowersNewJur.OtherVar,"majority")Majority lender (66<sup>2</sup>/<sub>3</sub> %)</div>
+			<div>@Html.RadioButtonFor(m=>m.ConsLvlAdditionBorrowersNewJur.OtherVar,"none")None</div>
+			<div>@Html.RadioButtonFor(m=>m.ConsLvlAdditionBorrowersNewJur.OtherVar,"non standard")Non standard consent level<br>
+				(i.e. Not all lender or majority lender(66<sup>2</sup>/<sub>3</sub> %))</div>
+			</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.ConsLvlAdditionBorrowersExstJur.ClauseRef,"",new {@class="bigger"})
+		</div></div>
+		<div  style="height:250px;" class="sec">
+		<div class="sideline">4.6 </div>
+			<p style="margin-left:3%;">Does the agreement allow additional guarantors?</p>
+			<div class="upside-form">
+			<div>@Html.RadioButtonFor(m=>m.DoesAgreeAllowAddGuarantors.OtherVar,true)Yes</div>
+
+			@Html.RadioButtonFor(m=>m.DoesAgreeAllowAddGuarantors.OtherVar,false)No</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.DoesAgreeAllowAddGuarantors.ClauseRef,"",new {@class="bigger"})
+		</div></div>
+				
+		<div  style="height:250px;" class="sec">					
+		<div class="sideline">4.7 </div>
+			<p style="margin-left:3%;">Consent level for additional guarantors in existing jurisdiction</p>
+			<div class="upside-form">
+			<div>@Html.RadioButtonFor(m=>m.ConsLvlAdditionGuarantorsExstJur.OtherVar,"all")All lenders</div>
+
+			<div>@Html.RadioButtonFor(m=>m.ConsLvlAdditionGuarantorsExstJur.OtherVar,"majority")Majority lender (66<sup>2</sup>/<sub>3</sub> %)</div>
+			<div>@Html.RadioButtonFor(m=>m.ConsLvlAdditionGuarantorsExstJur.OtherVar,"none")None</div>
+			<div>@Html.RadioButtonFor(m=>m.ConsLvlAdditionGuarantorsExstJur.OtherVar,"non standard")Non standard consent level<br>
+				(i.e. Not all lender or majority lender(66<sup>2</sup>/<sub>3</sub> %))</div>
+			</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.ConsLvlAdditionGuarantorsExstJur.ClauseRef,"",new {@class="bigger"})
+		</div></div>
+				
+		<div  style="height:250px;" class="sec">					
+		<div class="sideline">4.8 </div>
+			<p style="margin-left:3%;">Consent level for additional guarantors in new jurisdiction</p>
+			<div class="upside-form">
+			<div>@Html.RadioButtonFor(m=>m.ConsLvlAdditionGuarantorsNewJur.OtherVar,"all")All lenders</div>
+
+			<div>@Html.RadioButtonFor(m=>m.ConsLvlAdditionGuarantorsNewJur.OtherVar,"majority")Majority lender (66<sup>2</sup>/<sub>3</sub> %)</div>
+			<div>@Html.RadioButtonFor(m=>m.ConsLvlAdditionGuarantorsNewJur.OtherVar,"none")None</div>
+			<div>@Html.RadioButtonFor(m=>m.ConsLvlAdditionGuarantorsNewJur.OtherVar,"non standard")Non standard consent level<br>
+				(i.e. Not all lender or majority lender(66<sup>2</sup>/<sub>3</sub> %))</div>
+			</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.ConsLvlAdditionGuarantorsNewJur.ClauseRef,"",new {@class="bigger"})
+		</div></div>
+
+				
+	</div>
+	</div>
+	<div class="miniwindiv" style="margin-bottom:2%;">
+			<div class="closebar">
+			<span class="centerText" style="">Security and structure</span><img src="Content/Arrow.png" width="50" height="50" alt="expand or close overview">
+				
+
+				</div>
+				<div class="moo" style="height:100%;">
+				<div  style="height:250px;" class="sec">
+		<div class="sideline">5.1 </div>
+			<p style="margin-left:3%;">Is there security?</p>
+			<div class="upside-form">
+			<div>@Html.RadioButtonFor(m=>m.IsSecurity,true)Yes</div>
+
+			@Html.RadioButtonFor(m=>m.IsSecurity,false)No</div>
+      		</div>
+
+				
+      		<div style="height:250px;" class="sec">
+		<div class="sideline">5.2 </div>
+			<p style="margin-left:3%;">Brief description of security</p>
+			<div class="upside-form">
+			@Html.TextAreaFor(m=>m.SecurityDescrip,new {@class="bigger",@style="height:100px;"})
+			</div>
+      		</div>
+      			<div  style="height:250px;" class="sec">
+		 <div class="sideline">5.3 </div>
+			<p style="margin-left:3%;">What laws govern the security agreement?</p>
+			<div class="upside-form">
+       		@Html.TextBoxFor(m=>m.LawsGovSecurity,new {@class="bigger",@Value="English"})	
+      		</div>
+
+		</div>
+			<div  style="height:250px;" class="sec">
+			<div class="sideline">5.4 </div>
+			<p style="margin-left:3%;">Is there an intercreditor/subordination/priority agreement?</p>
+			<div class="upside-form">
+			<div>@Html.RadioButtonFor(m=>m.IsIntercreditorAgreement,true)Yes</div>
+
+			@Html.RadioButtonFor(m=>m.IsIntercreditorAgreement,false)No</div>
+      		</div>
+			<div  style="height:250px;" class="sec">
+			<div class="sideline">5.5 </div>
+			<p style="margin-left:3%;">Do the hedge counterparties benefit from the security?</p>
+			<div class="upside-form">
+			<div>@Html.RadioButtonFor(m=>m.SecurityBenefitHedge,true)Yes</div>
+
+			@Html.RadioButtonFor(m=>m.SecurityBenefitHedge,false)No</div>
+      		</div>
+			<div  style="height:250px;" class="sec">
+			<div class="sideline">5.6 </div>
+			<p style="margin-left:3%;">Have original documents been provided to the security trustee?</p>
+			<div class="upside-form">
+			<div>@Html.RadioButtonFor(m=>m.IsOriginalDocProvidedToSecurityTrust,true)Yes</div>
+
+			@Html.RadioButtonFor(m=>m.IsOriginalDocProvidedToSecurityTrust,false)No</div>
+      		</div>
+
+			
+			</div>
+	</div>
+			<div class="miniwindiv" style="margin-bottom:2%;">
+			<div class="closebar">
+			<span class="centerText" style="">Transferability and disclosure</span><img src="Content/Arrow.png" width="50" height="50" alt="expand or close overview"> <span style="float:right; margin-top:30px;">Clause Ref</span>
+				
+
+			</div>
+			<div class="moo" style="height:100%;">	
+		@{
+		string[][] s=new string[][]{
+		new string[]
+		{"When an event of default is outstanding, are the following permitted","DefaultEvent"},
+		new string[]
+		{"When no event of default is outstanding, are the following permitted?","NoDefaultEvent"}
+		};
+	
+		}
+		@for(var x=0; x<s.Length; x++){
+			<div  style="vertical-align:top; height:1500px;" class="sec">
+
+		
+		<div class="sideline">6.@(x+1)</div>
+			<p style="margin-left:3%;">@s[x][0]</p>
+
+			<ol type="a" style="">
+			<li class="liform">
+
+
+
+			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
+			<span style="">Transfer to other lenders:</span> 
+			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].TransferOtherLend.OtherVar,"with-consent(unreasonable)",new {@style="clear:both;"})With consent<br> (no requirement for reasonableness)</div>
+			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].TransferOtherLend.OtherVar,"with-consent(reasonable)",new {@style="clear:both;"})With consent<br> (not to be unreasonably withheld)</div>
+			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].TransferOtherLend.OtherVar,"with-consultation",new {@style="clear:both;"}) With consultation</div>
+			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].TransferOtherLend.OtherVar,"with-no-consultation",new {@style="clear:both;"})With no consent or consultation</div>
+			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].TransferOtherLend.OtherVar,"Other",new {@style="clear:both;"})Other (non-standard consent/consultation rights)</div>
+			</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.DefaultnoDefault[x].TransferOtherLend.ClauseRef,"",new {@class="bigger"})
+			</div>
+
+				</li>
+			<li class="liform">
+
+
+
+			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
+			<span style="">b. Disclosure to other lenders:(leverage)</span> 
+			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].DisclosureOtherLend.OtherVar,"with-consent(unreasonable)",new {@style="clear:both;"})With consent<br> (no requirement for reasonableness)</div>
+			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].DisclosureOtherLend.OtherVar,"with-consent(reasonable)",new {@style="clear:both;"})With consent<br> (not to be unreasonably withheld)</div>
+			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].DisclosureOtherLend.OtherVar,"with-consultation",new {@style="clear:both;"}) With consultation</div>
+			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].DisclosureOtherLend.OtherVar,"with-no-consultation",new {@style="clear:both;"})With no consent or consultation</div>
+			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].DisclosureOtherLend.OtherVar,"Other",new {@style="clear:both;"})Other (non-standard consent/consultation rights)</div>
+			</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.DefaultnoDefault[x].DisclosureOtherLend.ClauseRef,"",new {@class="bigger"})
+			</div>
+				</li>
+			<li class="liform">
+
+
+
+			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
+			<span style="">Transfer to banks and financial institutions:</span> 
+			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].TransferBankNFinancialInst.OtherVar,"with-consent(unreasonable)",new {@style="clear:both;"})With consent<br> (no requirement for reasonableness)</div>
+			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].TransferBankNFinancialInst.OtherVar,"with-consent(reasonable)",new {@style="clear:both;"})With consent<br> (not to be unreasonably withheld)</div>
+			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].TransferBankNFinancialInst.OtherVar,"with-consultation",new {@style="clear:both;"}) With consultation</div>
+			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].TransferBankNFinancialInst.OtherVar,"with-no-consultation",new {@style="clear:both;"})With no consent or consultation</div>
+			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].TransferBankNFinancialInst.OtherVar,"Other",new {@style="clear:both;"})Other (non-standard consent/consultation rights)</div>
+			</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.DefaultnoDefault[x].TransferBankNFinancialInst.ClauseRef,"",new {@class="bigger"})
+			</div>
+
+				</li>
+			<li class="liform">
+
+
+
+			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
+			<span style="">Disclosure to banks and financial institutions</span> 
+			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].DisclosureBankNFinancialInst.OtherVar,"with-consent(unreasonable)",new {@style="clear:both;"})With consent<br> (no requirement for reasonableness)</div>
+			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].DisclosureBankNFinancialInst.OtherVar,"with-consent(reasonable)",new {@style="clear:both;"})With consent<br> (not to be unreasonably withheld)</div>
+			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].DisclosureBankNFinancialInst.OtherVar,"with-consultation",new {@style="clear:both;"}) With consultation</div>
+			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].DisclosureBankNFinancialInst.OtherVar,"with-no-consultation",new {@style="clear:both;"})With no consent or consultation</div>
+			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].DisclosureBankNFinancialInst.OtherVar,"Other",new {@style="clear:both;"})Other (non-standard consent/consultation rights)</div>
+			</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.DefaultnoDefault[x].DisclosureBankNFinancialInst.ClauseRef,"",new {@class="bigger"})
+			</div>
+				</li>
+			<li class="liform">
+
+
+
+			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
+			<span style="">Transfer to any other person,trust,fund<br> 
+							or entity regularly engaged<br> 
+							or established for the purpose of making<br> 
+							loans(i.e. any potential counterparty)?</span> 
+			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].TransferAnyEntitMakesLoans.OtherVar,"with-consent(unreasonable)",new {@style="clear:both;"})With consent<br> (no requirement for reasonableness)</div>
+			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].TransferAnyEntitMakesLoans.OtherVar,"with-consent(reasonable)",new {@style="clear:both;"})With consent<br> (not to be unreasonably withheld)</div>
+			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].TransferAnyEntitMakesLoans.OtherVar,"with-consultation",new {@style="clear:both;"}) With consultation</div>
+			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].TransferAnyEntitMakesLoans.OtherVar,"with-no-consultation",new {@style="clear:both;"})With no consent or consultation</div>
+			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].TransferAnyEntitMakesLoans.OtherVar,"Other",new {@style="clear:both;"})Other (non-standard consent/consultation rights)</div>
+			</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.DefaultnoDefault[x].TransferAnyEntitMakesLoans.ClauseRef,"",new {@class="bigger"})
+			</div>
+
+				</li>
+			<li class="liform">
+
+
+
+			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
+			<span style="">Disclosure to any other person,trust,fund<br> 
+							or entity regularly engaged<br> 
+							or established for the purpose of making<br> 
+							loans(i.e. any potential counterparty)?</span> 
+		<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].DisclosureAnyEntitMakesLoans.OtherVar,"with-consent(unreasonable)",new {@style="clear:both;"})With consent<br> (no requirement for reasonableness)</div>
+			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].DisclosureAnyEntitMakesLoans.OtherVar,"with-consent(reasonable)",new {@style="clear:both;"})With consent<br> (not to be unreasonably withheld)</div>
+			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].DisclosureAnyEntitMakesLoans.OtherVar,"with-consultation",new {@style="clear:both;"}) With consultation</div>
+			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].DisclosureAnyEntitMakesLoans.OtherVar,"with-no-consultation",new {@style="clear:both;"})With no consent or consultation</div>
+			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].DisclosureAnyEntitMakesLoans.OtherVar,"Other",new {@style="clear:both;"})Other (non-standard consent/consultation rights)</div>
+			</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.DefaultnoDefault[x].DisclosureAnyEntitMakesLoans.ClauseRef,"",new {@class="bigger"})
+			</div>
+				</li>
+			<li class="liform">
+
+
+
+			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
+			<span style="">Is there a requirement for any potential transferee<br> to be regulated, hold a banking licence, etc?</span> 
+			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].AnyRequirPotentTransfereeRegulate.OtherVar,"with-consent(unreasonable)",new {@style="clear:both;"})With consent<br> (no requirement for reasonableness)</div>
+			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].AnyRequirPotentTransfereeRegulate.OtherVar,"with-consent(reasonable)",new {@style="clear:both;"})With consent<br> (not to be unreasonably withheld)</div>
+			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].AnyRequirPotentTransfereeRegulate.OtherVar,"with-consultation",new {@style="clear:both;"}) With consultation</div>
+			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].AnyRequirPotentTransfereeRegulate.OtherVar,"with-no-consultation",new {@style="clear:both;"})With no consent or consultation</div>
+			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].AnyRequirPotentTransfereeRegulate.OtherVar,"Other",new {@style="clear:both;"})Other (non-standard consent/consultation rights)</div>
+			</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.DefaultnoDefault[x].AnyRequirPotentTransfereeRegulate.ClauseRef,"",new {@class="bigger"})
+			</div>
+				</li>
+			
+			</ol> </div>
+			}
+			<div  style="height:250px;" class="sec">
+		<div class="sideline">6.3 </div>
+			<p style="margin-left:3%;">Would a potential transferee be required to<br> 
+										enter into a non disclosure agreement? </p>
+			<div class="upside-form">
+			<div>@Html.RadioButtonFor(m=>m.PotentTransfereeRequirEntNondisclosureAgree.OtherVar,true)Yes</div>
+
+			@Html.RadioButtonFor(m=>m.PotentTransfereeRequirEntNondisclosureAgree.OtherVar,false)No</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.PotentTransfereeRequirEntNondisclosureAgree.ClauseRef,"",new {@class="bigger"})
+		</div></div>
+			<div  style="height:250px;" class="sec">
+		<div class="sideline">6.4 </div>
+			<p style="margin-left:3%;">If consent is required for any transfer,<br>is it deemed given if not refused?</p>
+			<div class="upside-form">
+			<div>@Html.RadioButtonFor(m=>m.WhenConsRequirForTransferGivenNoRefuse.OtherVar,true)Yes</div>
+
+			@Html.RadioButtonFor(m=>m.WhenConsRequirForTransferGivenNoRefuse.OtherVar,false)No</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.WhenConsRequirForTransferGivenNoRefuse.ClauseRef,"",new {@class="bigger"})
+		</div></div>
+			<div  style="height:250px;" class="sec">
+		<div class="sideline">6.5 </div>
+			<p style="margin-left:3%;">If the consent of any issuing bank, agent or trustee
+					<br> required for a transfer?</p>
+			<div class="upside-form">
+			<div>@Html.RadioButtonFor(m=>m.ISConsentIssueBankRequirTrans.OtherVar,true)Yes</div>
+
+			@Html.RadioButtonFor(m=>m.ISConsentIssueBankRequirTrans.OtherVar,false)No</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.ISConsentIssueBankRequirTrans.ClauseRef,"",new {@class="bigger"})
+		</div></div>
+
+			<div style="height:250px;" class="sec">
+		<div class="sideline">6.6 </div>
+			<p style="margin-left:3%;">In exceptional circumstances only,<br> please provide any other relevant information for transfer</p>
+			<div class="upside-form">
+			@Html.TextAreaFor(m=>m.ExceptionalCircRelevInf.OtherVar,new {@class="bigger",@style="height:100px;"})
+			</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.ExceptionalCircRelevInf.ClauseRef,"",new {@class="bigger"})
+		</div></div>
+		<div  style="height:250px;" class="sec">
+		 <div class="sideline">6.7 </div>
+			<p style="margin-left:3%;">Minimum transfer amout:</p>
+			<div class="upside-form" style="width:20%;">Currency:
+			 @Html.DropDownListFor(m=>m.minTransAmount.Bool.OtherVar,new SelectList(new string[]{"my dad","my mom"}),new {@class="bigger",@style="margin-top:0;height:35px;"})	
+						</div>
+			<div class="upside-form">
+			Amount:
+       		<input type="number" id="minTransAmount_Number" name="minTransAmount.Number" class="bigger">
+      		</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.minTransAmount.Bool.ClauseRef,"",new {@class="bigger"})
+			</div>	            
+		</div>
+
+		<div style="height:250px;" class="sec">
+		<div class="sideline">6.8 </div>
+			<p style="margin-left:3%;">Can lenders grant security over their rights</p>
+			<div class="upside-form">
+			<div>@Html.RadioButtonFor(m=>m.LendersGrantSecurOverOwnRight.OtherVar,"Yes")Yes</div>
+			<div>@Html.RadioButtonFor(m=>m.LendersGrantSecurOverOwnRight.OtherVar,"No")No</div>
+			<div>@Html.RadioButtonFor(m=>m.LendersGrantSecurOverOwnRight.OtherVar,"not_stated")Not Stated</div>
+			</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.LendersGrantSecurOverOwnRight.ClauseRef,"",new {@class="bigger"})
+			</div></div>
+			</div>
+			</div>
+		<div class="miniwindiv" style="margin-bottom:2%; ">
+			<div class="closebar">
+			<span class="centerText" style="">Transferability and disclosure</span><img src="Content/Arrow.png" width="50" height="50" alt="expand or close overview"> <span style="float:right; margin-top:30px;">Clause Ref</span>
+				
+
+			</div>
+			<div class="moo" style="height:100%;">
+		<div  style="height:250px;" class="sec">
+		 <div class="sideline">7.1 </div>
+			<p style="margin-left:3%;">Permitted interest periods</p>
+			<div class="upside-form" style="width:70%;">
+			 @Html.DropDownListFor(m=>m.PermiteedInterPeriod.OtherVar,new SelectList(new string[]{"my dad","my mom"}),new {@class="bigger",@style="margin-top:0;height:35px;"})	
+						</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.PermiteedInterPeriod.ClauseRef,"",new {@class="bigger"})
+			</div>	            
+			</div>
+
+		<div style="height:300px;" class="sec">
+		<div class="sideline">7.2 </div>
+			<p style="margin-left:3%;">what consent requirements are<br> 
+										there for non-standard interest<br> 
+										periods (if any):</p>
+			<div class="upside-form">
+			@Html.TextAreaFor(m=>m.ConsentRequirNonStandardInterPeriod.OtherVar,new {@class="bigger",@style="height:100px;"})
+			</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.ConsentRequirNonStandardInterPeriod.ClauseRef,"",new {@class="bigger"})
+		</div></div>
+		<div  style="height:300px;" class="sec">
+		<div class="sideline">7.3 </div>
+			<p style="margin-left:3%;">Notice period for <br> submitting a utilisation <br> request for sterling</p>
+			<div class="upside-form">
+       		<input type="number" name="NoticePerForSubUtilRequestSterling.OtherVar" id="NoticePerForSubUtilRequestSterling_OtherVar" class="bigger"> 
+      		</div>
+			<div class="upside-down">Bussiness Days</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.NoticePerForSubUtilRequestSterling.ClauseRef,"",new {@class="bigger"})
+			</div>	              
+		</div>
+		<div  style="height:300px;" class="sec">
+		<div class="sideline">7.4 </div>
+			<p style="margin-left:3%;">Notice period for <br> submitting a utilisation <br> request for non-sterling</p>
+			<div class="upside-form">
+			<input type="number" name="NoticePerForSubUtilRequestNonSterling.OtherVar" id="NoticePerForSubUtilRequestNonSterling_OtherVar" class="bigger"> 
+      		</div>
+			<div class="upside-down">Bussiness Days</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.NoticePerForSubUtilRequestNonSterling.ClauseRef,"",new {@class="bigger"})
+			</div>	              
+		</div>
+		<div  style="height:250px;" class="sec">
+		 <div class="sideline">7.5 </div>
+			<p style="margin-left:3%;">Notice period of repayment of loans</p>
+			<div class="upside-form" style="width:20%;">
+					<input type="number" name="NotePerForRepayLoan.Number" id="NotePerForRepayLoan_Number" class="bigger"> 
+		
+						</div>
+			<div class="upside-form">
+       		@Html.DropDownListFor(m=>m.NotePerForRepayLoan.Bool.OtherVar,new SelectList(new string[]{"Buissness Days","Weeks"}),new {@class="bigger",@style=""})	
+      		</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.NotePerForRepayLoan.Bool.ClauseRef,"",new {@class="bigger"})
+			</div>	            
+
+	</div>
+	<div  style="height:250px;" class="sec">
+		 <div class="sideline">7.6</div>
+			<p style="margin-left:3%;">Notice period of repayment of loans</p>
+			<div class="upside-form" style="width:20%;">
+					<input type="number" name="NotePerForCancelCommit.Number" id="NotePerForCancelCommit_Number" class="bigger"> 
+		
+						</div>
+			<div class="upside-form">
+       		@Html.DropDownListFor(m=>m.NotePerForCancelCommit.Bool.OtherVar,new SelectList(new string[]{"Buissness Days","Weeks"}),new {@class="bigger",@style=""})	
+      		</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.NotePerForCancelCommit.Bool.ClauseRef,"",new {@class="bigger"})
+			</div>	            
+		</div>		
+			</div>
+			</div>
+	<div class="miniwindiv" style="margin-bottom:2%;">
+			<div class="closebar">
+			<span class="centerText" style="">Pricing</span><img src="Content/Arrow.png" width="50" height="50" alt="expand or close overview"> <span style="float:right; margin-top:30px;">Clause Ref</span>
+				
+
+			</div>
+			<div class="moo" style="height:100%;">
+
+			<div  style="height:250px;" class="sec">
+		 <div class="sideline">8.1 </div>
+			<p style="margin-left:3%;">What is the initial margin (%)?</p>
+			<div class="upside-form" style="width:20%;">
+			 @Html.DropDownListFor(m=>m.InitPercMargin.Bool.OtherVar,new SelectList(new string[]{"my dad","my mom"}),new {@class="bigger",@style="margin-top:0;height:35px;"})	
+						</div>
+
+			<div class="upside-form">
+			<input type="number" name="InitPercMargin.Number" id="InitPercMargin_Number" class="bigger"> 	
+      		</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.InitPercMargin.Bool.ClauseRef,"",new {@class="bigger"})
+			</div>	            
+		</div>
+			<div  style="height:250px;" class="sec">
+		<div class="sideline">8.2 </div>
+			<p style="margin-left:3%;">Are there commitment fees?</p>
+			<div class="upside-form">
+			<div>@Html.RadioButtonFor(m=>m.AreCommitmentFees.OtherVar,true)Yes</div>
+
+			@Html.RadioButtonFor(m=>m.AreCommitmentFees.OtherVar,false)No</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.AreCommitmentFees.ClauseRef,"",new {@class="bigger"})
+		</div></div>
+		<div  style="height:250px;" class="sec">
+		<div class="sideline">8.3 </div>
+			<p style="margin-left:3%;">Are there utilisation fees?</p>
+			<div class="upside-form">
+			<div>@Html.RadioButtonFor(m=>m.AreUtilFees.OtherVar,true)Yes</div>
+
+			@Html.RadioButtonFor(m=>m.AreUtilFees.OtherVar,false)No</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.AreUtilFees.ClauseRef,"",new {@class="bigger"})
+		</div></div>
+		<div  style="height:250px;" class="sec">
+		<div class="sideline">8.4 </div>
+			<p style="margin-left:3%;">Does the margin vary<br> (by references to a margin grid or otherwise)?</p>
+			<div class="upside-form">
+			<div>@Html.RadioButtonFor(m=>m.VaryMargin.OtherVar,true)Yes</div>
+
+			@Html.RadioButtonFor(m=>m.VaryMargin.OtherVar,false)No</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.VaryMargin.ClauseRef,"",new {@class="bigger"})
+		</div></div>
+			</div>
+
+			</div>
+				<div class="miniwindiv" style="margin-bottom:2%;">
+			<div class="closebar" style="float:left;">
+			<span class="centerText" style="">Defaulting Lenders</span><img src="Content/Arrow.png" width="50" height="50" alt="expand or close overview"> <span style="float:right; margin-top:30px;">Clause Ref</span>
+			</div>
+			<div class="moo" style="height:100%;clear:left;">
+				<div  style="height:250px;" class="sec">
+		<div class="sideline">9.1 </div>
+			<p style="margin-left:3%;">Does the credit agreement contain
+								<br> a concept of Defaulting Lenders?</p>
+			<div class="upside-form">
+			<div>@Html.RadioButtonFor(m=>m.CreditAgreeContainConcDefaultLenders.OtherVar,true)Yes</div>
+
+			@Html.RadioButtonFor(m=>m.CreditAgreeContainConcDefaultLenders.OtherVar,false)No</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.CreditAgreeContainConcDefaultLenders.ClauseRef,"",new {@class="bigger"})
+		</div></div>
+		<div  style="height:250px;" class="sec">
+		<div class="sideline">9.2 </div>
+			<p style="margin-left:3%;">Can Obligours set off against money
+								<br>owed to Defaulting Lenders?</p>
+			<div class="upside-form">
+			<div>@Html.RadioButtonFor(m=>m.CanObligorsOffAgainstOwedDefaultLenders.OtherVar,true)Yes</div>
+
+			@Html.RadioButtonFor(m=>m.CanObligorsOffAgainstOwedDefaultLenders.OtherVar,false)No</div>
+      		<div class="clauseform">
+			@Html.TextBoxFor(m=>m.CanObligorsOffAgainstOwedDefaultLenders.ClauseRef,"",new {@class="bigger"})
+		</div></div>
+		</div>
+		</div>
+		<div class="miniwindiv" style="">
+			<div class="closebar">
+			<span class="centerText" style="">Agents/Info/Name</span>
+			</div>
+			<div class="moo" style="height:100%;">
+			
+			<div class="sideline">10.1 </div>
+			<p style="margin-left:3%;">Types of Agent(eg. Agent, Security Agent) and the Agent Name:</p>
+
+			@Html.TextAreaFor(m=>m.AgentTypes,new {@class="bigger",@style="margin-left:3%;height:250px;"})
+
+			<div class="sideline">10.2 </div>
+			<p style="margin-left:3%;">Brief description of important info not regarded in questions above</p>
+
+			@Html.TextAreaFor(m=>m.OtherInfo,new {@class="bigger",@style="margin-left:3%;height:250px;"})
+
+			<div class="sideline">10.3 </div>
+			<p style="margin-left:3%;">File Name</p>
+
+			@Html.TextBoxFor(m=>m.settings.Docname,new {@class="bigger", @style="margin-left:3%;"})
+
+      		</div></div>
+	
+	
+		</div>
+
+		</div>
+
+		
+	
+	
+
+		
+       
+           
+
+       }
