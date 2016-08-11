@@ -1,4 +1,8 @@
-﻿.clauseform{
+﻿
+.scroller{
+	
+}
+.clauseform{
 	position:relative;float:right;margin-right:3%;
 }
 .clauseform{
@@ -54,12 +58,13 @@ overflow-x:hidden;
     
 }
 
+
 .maindiv{
     clear:left;
     color:black;
     margin:8%;
-    overflow-y:scroll;
-    overflow-x:hidden;
+    overflow:hidden;
+ 
     height:400px;
     
 }
@@ -232,6 +237,9 @@ p.numperpage{
     from{width:0px;}
     to{width:30px;}
 }
+tr.tab{
+width:100%;
+}
 tr.tab th{
 	background:grey;
 	background:-webkit-linear-gradient(lightgrey,grey);
@@ -240,13 +248,11 @@ tr.tab th{
 	background:linear-gradient(lightgrey,grey);
 
 }
-tr.tab td{
-    height:30px;
-     background-color:white;
-   transition:height 0.5s;
-   -moz-transition:height 0.1s,background-color 0.5s;
-   -webkit-transition:height 0.1s,background-color 0.5s;
-    -o-transition:height 0.1s,background-color 0.5s;
+tr.tab td:first-of-type{
+	width:15%;
+
+
+   
    
    	
 
@@ -257,11 +263,19 @@ tr.tab td{
     text-align:left;
 }
 tr.tab td{
+    height:30px;
+ 	background-color:white;
+	transition:height 0.5s;
+   -moz-transition:height 0.1s,background-color 0.5s;
+   -webkit-transition:height 0.1s,background-color 0.5s;
+    -o-transition:height 0.1s,background-color 0.5s;
 	border-bottom:black solid 1px;
+	width:20%;
 }
 table.tab{
     border-collapse:collapse;
-    width:95%;
+    width:828px;
+    table-layout:fixed;
 }
 tr.tab:hover td {
 	height:50px;
@@ -301,16 +315,19 @@ body{
     visibility:visible;
 }
 .icons img{
-    
+    transform: rotate3d(0, 0, 0, 0deg);
+
     -webkit-filter:grayscale(100%);
     filter: grayscale(100%);
     -webkit-transition:filter 1s;
     transition:-webkit-filter 1s;
+    transition:transform 1s;
 }
 .icons:hover img{
     
     -webkit-filter: grayscale(0%);
     filter: grayscale(0%);
+    transform: rotate3d(1, -2, 1, 45deg);
 }
 .action{
     width:120px;
