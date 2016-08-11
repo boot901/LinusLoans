@@ -92,7 +92,6 @@
     <Folder Include="Models\" />
     <Folder Include="Scripts\" />
     <Folder Include="Views\FormMaker\" />
-    <Folder Include="Helpers\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\HomeController.cs" />
@@ -109,8 +108,6 @@
     <Compile Include="Models\SearchModel.cs" />
     <Compile Include="Querry.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
-    <Compile Include="Helpers\RadioHelper.cs" />
-    <Compile Include="Helpers\Expression.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Web.config" />
@@ -914,8 +911,11 @@
     <Content Include="Scripts\tableFuncs.js" />
     <Content Include="Scripts\MainController.js" />
     <Content Include="Views\FormMaker\Viewer.cshtml" />
+<<<<<<< HEAD
     <Content Include="Views\FormMaker\Editor.cshtml" />
     <Content Include="Scripts\DocDetail.js" />
+=======
+>>>>>>> parent of 8b06943... Version 0.0.9
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\jquery-3.1.0.min.map" />

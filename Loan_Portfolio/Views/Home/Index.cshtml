@@ -1,11 +1,6 @@
 ﻿@model Loan_Portfolio.Models.SearchModel
-@{
-	Loan_Portfolio.Models.SearchModel s=(Loan_Portfolio.Models.SearchModel)ViewData["Mod"];
-
-}
 @using(Html.BeginForm("Index","Home",FormMethod.Post)){
 <div class="bar">
-	
 	<div class="side-bar"><h3 class="centerText">Allen &amp; Overy</h3></div> <h3 class="centerText">Loan Portfolio Reports</h3>
             <div class="maindiv">
                 <div class="sliderdiv">
@@ -38,22 +33,18 @@
                 <h4 class="float-right">Users: </h4>
                 </div>
                 <table class="tab" id="table">
-					<thead>
                     <tr class="tab">
-                        <th style="width:15%;">Date modified</th>
-                        <th style="width:20%;">LPR file name</th>
-                        <th style="width:20%;">Status</th>
-                        <th style="width:20%;">Action</th>
+                        <th>Date modified</th>
+                        <th>LPR file name</th>
+                        <th>Status</th>
+                        <th style="width:300px;">Action</th>
 						
                     </tr>
-				</thead>
-			<tbody style="display: block; width:828px;overflow: auto; height: 200px;overflow-y: scroll;overflow-x: hidden;">
 			@if(@ViewData["searchy"]!=null){
-		
 					for (var i=0;i<@ViewBag.list.Count;i++) {
 						
 
-						if((@ViewBag.list[i].settings.Docname.Contains(@ViewData["searchy"].ToString())&&@ViewBag.app.Equals("All"))||(@ViewBag.list[i].settings.status.Equals(ViewBag.app)&&@ViewBag.list[i].settings.Docname.Contains(@ViewData["searchy"].ToString()))){
+						if((@ViewBag.list[i].settings.Docname.Contains(@ViewData["searchy"].ToString())&&@ViewBag.app.Equals("All"))){
 
 							<tr class="tab">
 							<td>@ViewBag.list[i].OrigDate</td>
@@ -62,9 +53,6 @@
 									
 							<td>
 
-
-
-
 							<div class="icons">
 							<a style="background:none;" href="@Url.Action("Viewer","FormMaker",new {idNum=@i})">
 							<img src="Content/eyes.png" width="40" height="20" >
@@ -72,13 +60,13 @@
 							<span class="tooltip">View</span>
 							</div>
 							<div class="icons">
-							<a style="background:none;" href="@Url.Action("Editor","FormMaker",new {idNum=@i})">
+							<a style="background:none;">
 							<img src="Content/duplicate2.png" width="20" height="30">
 							</a>
 							<span class="tooltip">Edit document</span>
 							</div>
 							<div class="icons">
-							<a style="background:none;" href="@Url.Action("Duplicate","Home",new {idNum=@i,searcher=@s.searcher,approval=@s.approval,numpage=@s.numpage,groups=@s.groups})">
+							<a style="background:none;">
 							<img src="Content/duplicate.png" width="20" height="30">
 							</a>
 							<span class="tooltip">Duplicate document</span>
@@ -92,11 +80,8 @@
 
 						</tr>
 						}
-					}
+					}}
 
-				}
-
-				</tbody>
 							
                 </table>
             </div>

@@ -25,8 +25,6 @@ namespace Loan_Portfolio.Controllers
 			ViewData["DefaultEvent"]=null;
 			return View ();
         }
-
-
 		[Route("Table")]
 		[HttpPost]
 		public ActionResult Table(string e) {
@@ -50,6 +48,7 @@ namespace Loan_Portfolio.Controllers
 			System.IO.File.WriteAllText(@"\path.json", json);
 			return RedirectToAction("Index", "Home");
 		}
+<<<<<<< HEAD
 
 		[Route("Edit")]
 		[HttpPost]
@@ -73,6 +72,8 @@ namespace Loan_Portfolio.Controllers
 			return RedirectToAction("Index", "Home");
 		}
 
+=======
+>>>>>>> parent of 8b06943... Version 0.0.9
 		[Route("Viewer")]
 		public ActionResult Viewer(int idNum) {
 			string[] lenders ={ "Barclays", "Metro Bank","RBS","Barkclays Bank Plc","Fifth Third Bank",
@@ -100,6 +101,7 @@ namespace Loan_Portfolio.Controllers
 			ViewData["security1"]=s;
 			return View();
 		}
+<<<<<<< HEAD
 
 
 		[Route("Editor")]
@@ -130,6 +132,8 @@ namespace Loan_Portfolio.Controllers
 			ViewData["DocDetail"] = json;
 			return View();
 		}
+=======
+>>>>>>> parent of 8b06943... Version 0.0.9
     }
 	 
 }
