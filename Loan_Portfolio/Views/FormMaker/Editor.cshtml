@@ -4,35 +4,19 @@
 
 @model Loan_Portfolio.Models.DocDetail
 @{
-Loan_Portfolio.Models.DocDetail Doc= (Loan_Portfolio.Models.DocDetail)ViewData["DocDetail"];
-string[] YesNo=new string[]{"Yes","No"};
-}
-@functions{
-public static string nonnegate(bool b){
-	if(b==true){
-	return "checked";
-	}else{
-	return "";
-	}
-}
-public static string negate(bool b){
-if(b==true){
-	return "";
-	}else{
-	return "checked";
-	}
-}
+	string Doc=(string)ViewData["DocDetail"];
 }
 
-
-@using(@Html.BeginForm("Edit","FormMaker",FormMethod.Post)){
-
-<div class="bar"><div class="side-bar" style="margin-left:0px;"><h3 class="centerText">Allen &amp; Overy</h3></div> <h3 class="centerText">Loan Portfolio Reports</h3>
+<div ng-app="App2">
+<div ng-controller="TableController">
+<form action="/FormMaker/Table" method="post"><div class="bar"><div class="side-bar" style="margin-left:0px;"><h3 class="centerText">Allen &amp; Overy</h3></div> <h3 class="centerText">Loan Portfolio Reports</h3>
        </div>
        <div class="underbar">
-           <input value="Save" type="submit" class="save">
-           <a href="@Url.Action("Index","Home")" class="canc float-right" style="background:none;">Cancel</a>
-           @Html.DropDownListFor(m=>m.settings.status,new SelectList(new string[]{"Approved","Not Approved"}),new {@class="quessy"})
+           <input value="Save" type="submit" class="save" ng-click="alerter()">
+           <a href="/" class="canc float-right" style="background:none;">Cancel</a>
+           <select class="quessy" id="settings_status" ng-model="data.settings.status"><option>Approved</option>
+<option>Not Approved</option>
+</select>
            <span class="float-right" style="margin-top:18px;">Report Status:</span>
            
 	
@@ -46,13 +30,14 @@ if(b==true){
 		
 			<div class="moo">
 			<h1 class="below">Security</h1>
-			@Html.TextBoxFor(m=>m.Security.p1,new {@Value=@Doc.Security.p1,@class="below"})
-			@Html.TextBoxFor(m=>m.Security.p2,new {@class="below",@Value=@Doc.Security.p2})
-			@Html.TextBoxFor(m=>m.Security.p3,new {@class="below",@Value=@Doc.Security.p3})
-			@Html.TextBoxFor(m=>m.Security.p4,new {@class="below",@Value=@Doc.Security.p4})
-			@Html.TextBoxFor(m=>m.Security.p5,new {@class="below",@Value=@Doc.Security.p5})
+			<input class="below" id="Security_p1" ng-model="data.Security.p1" type="text"  />
+			<input class="below" id="Security_p2" ng-model="data.Security.p2" type="text"  />
+			<input class="below" id="Security_p3" ng-model="data.Security.p3" type="text"  />
+			<input class="below" id="Security_p4" ng-model="data.Security.p4" type="text"  />
+			<input class="below" id="Security_p5" ng-model="data.Security.p5" type="text"  />
 			<h1 class="below">Text Description*</h1>
-			@Html.TextAreaFor(m=>m.Security.Comment,new {@class="textar",@Value=@Doc.Security.Comment})
+			<textarea class="textar" cols="20" id="Security_Comment" ng-model="data.Security.Comment" rows="2">
+</textarea>
 			</div>
 			</div>
 
@@ -70,15 +55,15 @@ if(b==true){
                        
                        <div class="upside-form">
                            <p>Allen &amp; Overy Client/Matter Number</p>
-                           @Html.TextBoxFor(m=>m.FormIdentification.AllenOveryCorM_Num,new {@class="bigger",@Value=@Doc.FormIdentification.AllenOveryCorM_Num})
+                           <input class="bigger" id="FormIdentification_AllenOveryCorM_Num" ng-model="data.FormIdentification.AllenOveryCorM_Num" type="text"  />
                                </div>
                        <div class="upside-form">
                            <p>Principal borrowers</p>
-                          	@Html.TextBoxFor(m=>m.FormIdentification.Principle_Borrow,new {@class="bigger",@Value=@Doc.FormIdentification.Principle_Borrow})
+                          	<input class="bigger" id="FormIdentification_Principle_Borrow" ng-model="data.FormIdentification.Principle_Borrow" type="text"  />
                                </div>
                        <div class="upside-form">
                            <p>Relevant facility e.g. Senior,Junior etc.</p>
-                         	@Html.TextBoxFor(m=>m.FormIdentification.Relevant_Facility,new {@class="bigger",@Value=@Doc.FormIdentification.Relevant_Facility})
+                         	<input class="bigger" id="FormIdentification_Relevant_Facility" ng-model="data.FormIdentification.Relevant_Facility" type="text"  />
                                </div>
                    </div>
                   
@@ -89,23 +74,137 @@ if(b==true){
                     	<p> Commonly used lenders </p>
 						<div style="background:white;overflow-x:hidden;overflow-y:scroll;float:left; height:129px;border:grey solid 1px; margin-bottom:10%;">
 
-						@for(int i=0; i<@ViewBag.lenderlist.Length;i++){
 							<div class="tingy" style="margin-bottom:12px;">
-							@Html.CheckBoxFor(m=>m.Common_Venders[@i],new {@id=@i, @class="checky",@Value=@Doc.Common_Venders[@i]})
-							<label for="@i"><span class="checkerooo"></span>@ViewBag.lenderlist[i]</label>
+							<input class="checky" id="0" ng-model="data.Common_Venders[0]" type="checkbox"/>
+							<label for="0"><span class="checkerooo"></span>Barclays</label>
 							</div>
-							}
+							<div class="tingy" style="margin-bottom:12px;">
+							<input class="checky" id="1" ng-model="data.Common_Venders[1]" type="checkbox"/><input ng-model="data.Common_Venders[1]" type="hidden" ng-value="false" />
+							<label for="1"><span class="checkerooo"></span>Metro Bank</label>
+							</div>
+							<div class="tingy" style="margin-bottom:12px;">
+							<input class="checky" id="2" ng-model="data.Common_Venders[2]" type="checkbox"/><input ng-model="data.Common_Venders[2]" type="hidden" ng-value="false" />
+							<label for="2"><span class="checkerooo"></span>RBS</label>
+							</div>
+							<div class="tingy" style="margin-bottom:12px;">
+							<input class="checky" id="3" ng-model="data.Common_Venders[3]" type="checkbox"/><input ng-model="data.Common_Venders[3]" type="hidden" ng-value="false" />
+							<label for="3"><span class="checkerooo"></span>Barkclays Bank Plc</label>
+							</div>
+							<div class="tingy" style="margin-bottom:12px;">
+							<input class="checky" id="4" ng-model="data.Common_Venders[4]" type="checkbox"/><input ng-model="data.Common_Venders[4]" type="hidden" ng-value="false" />
+							<label for="4"><span class="checkerooo"></span>Fifth Third Bank</label>
+							</div>
+							<div class="tingy" style="margin-bottom:12px;">
+							<input class="checky" id="5" ng-model="data.Common_Venders[5]" type="checkbox"/><input ng-model="data.Common_Venders[5]" type="hidden" ng-value="false" />
+							<label for="5"><span class="checkerooo"></span>HSBC Bank Plc</label>
+							</div>
+							<div class="tingy" style="margin-bottom:12px;">
+							<input class="checky" id="6" ng-model="data.Common_Venders[6]" type="checkbox"/><input ng-model="data.Common_Venders[6]" type="hidden" ng-value="false" />
+							<label for="6"><span class="checkerooo"></span>Nordea</label>
+							</div>
+							<div class="tingy" style="margin-bottom:12px;">
+							<input class="checky" id="7" ng-model="data.Common_Venders[7]" type="checkbox"/><input ng-model="data.Common_Venders[7]" type="hidden" ng-value="false" />
+							<label for="7"><span class="checkerooo"></span>Santander</label>
+							</div>
+							<div class="tingy" style="margin-bottom:12px;">
+							<input class="checky" id="8" ng-model="data.Common_Venders[8]" type="checkbox"/><input ng-model="data.Common_Venders[8]" type="hidden" ng-value="false" />
+							<label for="8"><span class="checkerooo"></span>Citi</label>
+							</div>
+							<div class="tingy" style="margin-bottom:12px;">
+							<input class="checky" id="9" ng-model="data.Common_Venders[9]" type="checkbox"/><input ng-model="data.Common_Venders[9]" type="hidden" ng-value="false" />
+							<label for="9"><span class="checkerooo"></span>Bank of America Merrill Lynch</label>
+							</div>
+							<div class="tingy" style="margin-bottom:12px;">
+							<input class="checky" id="10" ng-model="data.Common_Venders[10]" type="checkbox"/><input ng-model="data.Common_Venders[10]" type="hidden" ng-value="false" />
+							<label for="10"><span class="checkerooo"></span>Commerzbank</label>
+							</div>
+							<div class="tingy" style="margin-bottom:12px;">
+							<input class="checky" id="11" ng-model="data.Common_Venders[11]" type="checkbox"/><input ng-model="data.Common_Venders[11]" type="hidden" ng-value="false" />
+							<label for="11"><span class="checkerooo"></span>ING</label>
+							</div>
+							<div class="tingy" style="margin-bottom:12px;">
+							<input class="checky" id="12" ng-model="data.Common_Venders[12]" type="checkbox"/><input ng-model="data.Common_Venders[12]" type="hidden" ng-value="false" />
+							<label for="12"><span class="checkerooo"></span>RBS</label>
+							</div>
+							<div class="tingy" style="margin-bottom:12px;">
+							<input class="checky" id="13" ng-model="data.Common_Venders[13]" type="checkbox"/><input ng-model="data.Common_Venders[13]" type="hidden" ng-value="false" />
+							<label for="13"><span class="checkerooo"></span>Normura</label>
+							</div>
+							<div class="tingy" style="margin-bottom:12px;">
+							<input class="checky" id="14" ng-model="data.Common_Venders[14]" type="checkbox"/><input ng-model="data.Common_Venders[14]" type="hidden" ng-value="false" />
+							<label for="14"><span class="checkerooo"></span>Credit Suisse</label>
+							</div>
+							<div class="tingy" style="margin-bottom:12px;">
+							<input class="checky" id="15" ng-model="data.Common_Venders[15]" type="checkbox"/><input ng-model="data.Common_Venders[15]" type="hidden" ng-value="false" />
+							<label for="15"><span class="checkerooo"></span>Credit Agricole</label>
+							</div>
+							<div class="tingy" style="margin-bottom:12px;">
+							<input class="checky" id="16" ng-model="data.Common_Venders[16]" type="checkbox"/><input ng-model="data.Common_Venders[16]" type="hidden" ng-value="false" />
+							<label for="16"><span class="checkerooo"></span>Deutche Bank</label>
+							</div>
+							<div class="tingy" style="margin-bottom:12px;">
+							<input class="checky" id="17" ng-model="data.Common_Venders[17]" type="checkbox"/><input ng-model="data.Common_Venders[17]" type="hidden" ng-value="false" />
+							<label for="17"><span class="checkerooo"></span>Societe General</label>
+							</div>
+							<div class="tingy" style="margin-bottom:12px;">
+							<input class="checky" id="18" ng-model="data.Common_Venders[18]" type="checkbox"/><input ng-model="data.Common_Venders[18]" type="hidden" ng-value="false" />
+							<label for="18"><span class="checkerooo"></span>Standard Chartered Bank</label>
+							</div>
+							<div class="tingy" style="margin-bottom:12px;">
+							<input class="checky" id="19" ng-model="data.Common_Venders[19]" type="checkbox"/><input ng-model="data.Common_Venders[19]" type="hidden" ng-value="false" />
+							<label for="19"><span class="checkerooo"></span>Bank of Tokyo Mitsubishi</label>
+							</div>
+							<div class="tingy" style="margin-bottom:12px;">
+							<input class="checky" id="20" ng-model="data.Common_Venders[20]" type="checkbox"/><input ng-model="data.Common_Venders[20]" type="hidden" ng-value="false" />
+							<label for="20"><span class="checkerooo"></span>Royal bank of Scotland plc</label>
+							</div>
+							<div class="tingy" style="margin-bottom:12px;">
+							<input class="checky" id="21" ng-model="data.Common_Venders[21]" type="checkbox"/><input ng-model="data.Common_Venders[21]" type="hidden" ng-value="false" />
+							<label for="21"><span class="checkerooo"></span>Lloyds Bank Plc</label>
+							</div>
+							<div class="tingy" style="margin-bottom:12px;">
+							<input class="checky" id="22" ng-model="data.Common_Venders[22]" type="checkbox"/><input ng-model="data.Common_Venders[22]" type="hidden" ng-value="false" />
+							<label for="22"><span class="checkerooo"></span>JP Morgan</label>
+							</div>
+							<div class="tingy" style="margin-bottom:12px;">
+							<input class="checky" id="23" ng-model="data.Common_Venders[23]" type="checkbox"/><input ng-model="data.Common_Venders[23]" type="hidden" ng-value="false" />
+							<label for="23"><span class="checkerooo"></span>UBS</label>
+							</div>
+							<div class="tingy" style="margin-bottom:12px;">
+							<input class="checky" id="24" ng-model="data.Common_Venders[24]" type="checkbox"/><input ng-model="data.Common_Venders[24]" type="hidden" ng-value="false" />
+							<label for="24"><span class="checkerooo"></span>Goldman Sachs</label>
+							</div>
+							<div class="tingy" style="margin-bottom:12px;">
+							<input class="checky" id="25" ng-model="data.Common_Venders[25]" type="checkbox"/><input ng-model="data.Common_Venders[25]" type="hidden" ng-value="false" />
+							<label for="25"><span class="checkerooo"></span>ANZ</label>
+							</div>
+							<div class="tingy" style="margin-bottom:12px;">
+							<input class="checky" id="26" ng-model="data.Common_Venders[26]" type="checkbox"/><input ng-model="data.Common_Venders[26]" type="hidden" ng-value="false" />
+							<label for="26"><span class="checkerooo"></span>SEB</label>
+							</div>
+							<div class="tingy" style="margin-bottom:12px;">
+							<input class="checky" id="27" ng-model="data.Common_Venders[27]" type="checkbox"/><input ng-model="data.Common_Venders[27]" type="hidden" ng-value="false" />
+							<label for="27"><span class="checkerooo"></span>Danske</label>
+							</div>
+							<div class="tingy" style="margin-bottom:12px;">
+							<input class="checky" id="28" ng-model="data.Common_Venders[28]" type="checkbox"/><input ng-model="data.Common_Venders[28]" type="hidden" ng-value="false" />
+							<label for="28"><span class="checkerooo"></span>BNP Paribas</label>
+							</div>
+							<div class="tingy" style="margin-bottom:12px;">
+							<input class="checky" id="29" ng-model="data.Common_Venders[29]" type="checkbox"/><input ng-model="data.Common_Venders[29]" type="hidden" ng-value="false" />
+							<label for="29"><span class="checkerooo"></span>Rabobank</label>
+							</div>
 						</div>
 					
 					</div>
 					<div class="upside-form">
 					 <p>Enter Aditional Lenders</p>
-                     @Html.TextBoxFor(m=>m.AdditionalLenders,new {@class="bigger",@style="float:left",@Value=@Doc.AdditionalLenders})
+                     <input class="bigger" id="AdditionalLenders" ng-model="data.AdditionalLenders" style="float:left" type="text"  />
                   
 					</div>
 				<div class="upside-form" style="">
 					 <p>Final Report Distribution List</p>
-                  				   @Html.TextBoxFor(m=>m.final_report_dist_list,new {@class="bigger",@Value=@Doc.final_report_dist_list})
+                  				   <input class="bigger" id="final_report_dist_list" ng-model="data.final_report_dist_list" type="text"  />
 
 					</div>
 				
@@ -114,7 +213,7 @@ if(b==true){
 				 <div class="sideline">1.3 </div>
 				<div class="upside-form">
 					 <p>Principal sponsors (if any)</p>
-                    				@Html.TextBoxFor(m=>m.PSponsor,new {@class="bigger",@Value=@Doc.PSponsor})	
+                    				<input class="bigger" id="PSponsor" ng-model="data.PSponsor" type="text"  />	
                     
 					</div>
 				</div>
@@ -123,7 +222,7 @@ if(b==true){
 				<div class="upside-form">
 					 <p>Original Date of making</p>
 									
-                    				@Html.TextBoxFor(m=>m.OrigDate,new {@class="bigger",@Value=@Doc.OrigDate})
+                    				<input value="09/08/2016" class="bigger" id="OrigDate" ng-model="data.OrigDate" type="text"  />
 
                     
 					</div>
@@ -133,19 +232,19 @@ if(b==true){
 				<div class="upside-form">
 					 <p>Date of most recent amendment / amendment and restatement (if different)</p>
 									
-                    				@Html.TextBoxFor(m=>m.Date,new {@class="bigger",@Value=@DateTime.Now.ToShortDateString()})
+                    				<input value="09/08/2016" class="bigger" id="Date" ng-model="data.Date" type="text"  />
 
                     
 					
 				</div>
 			</div>
 
-			<div ng-app="App">
+
 			<div class="sec2" id="tbl1">
 				<div class="sideline">1.6 </div>
 				<div>
 					 <p style="margin-left:3%">Total Commitments</p>
-						<div ng-controller="TableController">			
+									
                     	<table id="commitments" style="width=100%;">
 						<tbody >
                     	<tr>
@@ -158,17 +257,17 @@ if(b==true){
 							
 							<td> 
 								<a ng-click="RemoveRow()" style="background-color:IndianRed;position:absolute;">X</a>
-								<select value="Commit_{{$index}}__Facility" id="Commit_{{$index}}__Facility" name="Commit[{{$index}}].Facility" style=""><option value="ko">ko</option>
+								<select id="Commit_{{$index}}__Facility" ng-model="data.Commit[$index].Facility" style=""><option value="ko">ko</option>
 								<option value="lol">lol</option>
 								</select>	
 							</td>
 							<td>
-								<select value="Commit_{{$index}}__Facility"  id="Commit_{{$index}}__Currency" name="Commit[{{$index}}].Currency" style=""><option value="ko">ko</option>
+								<select id="Commit_{{$index}}__Currency" ng-model="data.Commit[$index].Currency" style=""><option value="ko">ko</option>
 								<option value="lol">lol</option>
 								</select>	
 							</td>					
 							<td>
-								<input type="number" name="Commit[{{$index}}].Amount" id="Commit_{{$index}}__Amount">
+								<input type="number" ng-model="data.Commit[$index].Amount" id="Commit_{{$index}}__Amount">
 							</td>
 
 						</tr>
@@ -176,7 +275,7 @@ if(b==true){
 						</tbody>
 						</table>
 						<button type="button" ng-click="AddRow()" class="save" style="width:30%;float:left;margin-left:35%;">Add commitement</button>
-						</div>
+
 
 				</div>
 			</div>
@@ -187,7 +286,7 @@ if(b==true){
 									
 					<div>
 					 <p style="margin-left:3%">Contacts</p>
-						<div ng-controller="TableController2">				
+									
                     	<table id="contacts" style="width=100%;">
 						<tbody >
                     	<tr>
@@ -195,26 +294,26 @@ if(b==true){
 						<th>Role</th>
 						<th>Contact Number</th>	
 						</tr>
-						<tr class="lol" ng-repeat="n in range(num) track by $index">
+						<tr class="lol" ng-repeat="n in range(num2) track by $index">
 			
 							<td> 
-								<a ng-click="RemoveRow()" style="background-color:IndianRed;">X</a>
-								<input type="text" style="height:30px;" name="Contacts[{{$index}}].FullName" id="Contacts_{{$index}}__FullName">
+								<a ng-click="RemoveRow2()" style="background-color:IndianRed;">X</a>
+								<input type="text" style="height:30px;" ng-model="data.Contacts[$index].FullName" id="Contacts_{{$index}}__FullName">
 							</td>
 								<td>
-								<input type="text" style="height:30px;" name="Contacts[{{$index}}].Role" id="Contacts_{{$index}}__Role">
+								<input type="text" style="height:30px;" ng-model="data.Contacts[$index].Role" id="Contacts_{{$index}}__Role">
 									
 								</td>					
 							<td>
-								<input type="text" style="height:30px;" name="Contacts[{{$index}}].Contact" id="Contacts_{{$index}}__Contact">
+								<input type="text" style="height:30px;" ng-model="data.Contacts[$index].Contact" id="Contacts_{{$index}}__Contact">
 							</td >
 
 						</tr>
 
 						</tbody>
 						</table>
-							<button type="button" ng-click="AddRow()" class="save" style="width:30%;float:left;margin-left:35%;">Add contact</button>
-						</div>
+							<button type="button" ng-click="AddRow2()" class="save" style="width:30%;float:left;margin-left:35%;">Add contact</button>
+						
 						</div>
 						
 
@@ -222,18 +321,14 @@ if(b==true){
 					
 				</div>
 			</div>
-			</div>
+
 				<div class="sec" style="height:250px;">
 						<div class="sideline">1.8</div>
 						<div class="upside-form">
 						<p style="margin-left:3%">Is this file highly restricted<br> or matter price sensitive?</p>
-						<div>@Html.RadioButtonFor(m=>m.restricted,true, new {@Checked=""})Yes</div>
-						@if(Doc.restricted==false){
-						<div>@Html.RadioButtonFor(m=>m.restricted,false,new {@Checked=""})No</div>}
-						@if(Doc.restricted==true){
-						<div>@Html.RadioButtonFor(m=>m.restricted,false)No</div>}
+						<div><input id="restricted" ng-model="data.restricted" type="radio" ng-value="true" />Yes</div>
 
-
+						<div><input id="restricted" ng-model="data.restricted" type="radio" ng-value="false" />No</div>
 						</div>
 					</div>
                    </div>
@@ -257,11 +352,13 @@ if(b==true){
 							<th>Amount</th>
 						</tr>
 						<tr class="lol">
-							<td>@Html.TextBoxFor(m=>m.Facilities.Facility)</td>
-							<td>@Html.TextBoxFor(m=>m.Facilities.Type)</td>
-							<td>@Html.TextBoxFor(m=>m.Facilities.Maturity)</td>
-							<td>@Html.DropDownListFor(m=>m.Facilities.Currency, new SelectList(new string[] {"DDD","AAA"}))</td>
-							<td><input type="number" name="Facilities.Amount" id="Facilities_Amount"></td>
+							<td><input id="Facilities_Facility" ng-model="data.Facilities.Facility" type="text"  /></td>
+							<td><input id="Facilities_Type" ng-model="data.Facilities.Type" type="text"  /></td>
+							<td><input id="Facilities_Maturity" ng-model="data.Facilities.Maturity" type="text"  /></td>
+							<td><select id="Facilities_Currency" ng-model="data.Facilities.Currency"><option>DDD</option>
+<option>AAA</option>
+</select></td>
+							<td><input type="number" ng-model="data.Facilities.Amount" id="Facilities_Amount"></td>
 						</tr>
 					</tbody>
 				</table>
@@ -271,10 +368,10 @@ if(b==true){
 		 <div class="sideline">2.2 </div>
 			<p style="margin-left:3%;">Purpose Clause</p>
 			<div class="upside-form">
-       		@Html.TextBoxFor(m=>m.PurposeClause.OtherVar,new {@class="bigger", @Value=@Doc.PurposeClause.OtherVar})	
+       		<input class="bigger" id="PurposeClause_OtherVar" ng-model="data.PurposeClause.OtherVar" type="text"  />	
       		</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.PurposeClause.ClauseRef,"",new {@class="bigger", @Value=@Doc.PurposeClause.ClauseRef})
+			<input class="bigger" id="PurposeClause_ClauseRef" ng-model="data.PurposeClause.ClauseRef" type="text"  />
 			</div>	            
 		</div>
 
@@ -283,7 +380,9 @@ if(b==true){
 					<p style="margin-left:3%;">What level of consent is required to approve an extension of maturity</p>
 				<div class="upside-form">
 					 
-       @Html.DropDownListFor(m=>m.consentlvl,new SelectList(new string[]{"my dad","my mom"}),new {@class="bigger"})	
+       <select class="bigger" id="consentlvl" ng-model="data.consentlvl"><option>my dad</option>
+<option>my mom</option>
+</select>	
 
 					</div>
 		</div>
@@ -293,55 +392,78 @@ if(b==true){
 					<p style="margin-left:3%;">Extension options</p>
 				<div class="upside-form">
 					 
-       @Html.DropDownListFor(m=>m.extension,new SelectList(new string[]{"my dad","my mom"}),new {@class="bigger"})	
+       <select class="bigger" id="extension" ng-model="data.extension"><option>my dad</option>
+<option>my mom</option>
+</select>	
 
 					</div>
 		</div>
 		<div  style="height:250px;" class="sec">
 		 <div class="sideline">2.5 </div>
 			<p style="margin-left:3%;">Does the credit agreement contain interest rate floors(e.g. LIBOR may not be below zero)?</p>
-			@Html.DefaultClauseRadioListFor(m=>m.CreditToInterestRate.OtherVar,m=>m.CreditToInterestRate.ClauseRef,new string[]{"Yes","No"},new bool[]{true,false},Doc.CreditToInterestRate.ClauseRef,Doc.CreditToInterestRate.OtherVar)
+			<div class="upside-form">
+			<div><input id="credittointeresttrue" ng-model="data.CreditToInterestRate.OtherVar" type="radio" ng-value="true" />Yes</div>
 
-		
-      		
-				
-
-			</div>    
+			<input id="credittointerestfalse" ng-model="data.CreditToInterestRate.OtherVar" type="radio" ng-value="false" />No</div>
+      		<div class="clauseform">
+			<input class="bigger" id="CreditToInterestRate_ClauseRef" ng-model="data.CreditToInterestRate.ClauseRef" type="text"  />
+			</div>	</div>    
 
 
 		<div  style="height:250px;" class="sec">
 
 						
 		 <div class="sideline">2.6 </div>
-			<p style="margin-left:3%;">Is disposal a mandatory prepayment event?</p>
-			@Html.DefaultClauseRadioListFor(m=>m.DisposeMandatorPrepayment.OtherVar,m=>m.DisposeMandatorPrepayment.ClauseRef,new string[]{"Yes","No"},new bool[]{true,false},Doc.DisposeMandatorPrepayment.ClauseRef,Doc.DisposeMandatorPrepayment.OtherVar)
-			</div>	            
+			<p style="margin-left:3%;">Is disposal a mandatory prepayment event</p>
+			<div class="upside-form">
+			<div><input id="DisposeMandatorPrepayment_OtherVar" ng-model="data.DisposeMandatorPrepayment.OtherVar" type="radio" ng-value="true" />Yes</div>
+
+			<input id="DisposeMandatorPrepayment_OtherVar" ng-model="data.DisposeMandatorPrepayment.OtherVar" type="radio" ng-value="false" />No</div>
+      		<div class="clauseform">
+			<input class="bigger" id="DisposeMandatorPrepayment_ClauseRef" ng-model="data.DisposeMandatorPrepayment.ClauseRef" type="text"  />
+		</div></div>	            
 		<div  style="height:250px;" class="sec">
 
 							
 		 <div class="sideline">2.7 </div>
 			<p style="margin-left:3%;">Is a change of control a mandatory prepayment event?</p>
+			<div class="upside-form">
+			<div><input id="ChangeMandatorPrepayment_OtherVar" ng-model="data.ChangeMandatorPrepayment.OtherVar" type="radio" ng-value="true" />Yes</div>
 
-			@Html.DefaultClauseRadioListFor(m=>m.ChangeMandatorPrepayment.OtherVar,m=>m.ChangeMandatorPrepayment.ClauseRef,new string[]{"Yes","No"},new bool[]{true,false},Doc.ChangeMandatorPrepayment.ClauseRef,Doc.ChangeMandatorPrepayment.OtherVar)
-
-      	</div>	
+			<input id="ChangeMandatorPrepayment_OtherVar" ng-model="data.ChangeMandatorPrepayment.OtherVar" type="radio" ng-value="false" />No</div>
+      		<div class="clauseform">
+			<input class="bigger" id="ChangeMandatorPrepayment_ClauseRef" ng-model="data.ChangeMandatorPrepayment.ClauseRef" type="text"  />
+		</div></div>	
 		<div  style="height:250px;" class="sec">					
 		<div class="sideline">2.8 </div>
 			<p style="margin-left:3%;">Purpose Clause</p>
-			@Html.DefaultClauseRadioListFor(m=>m.CreditToTax_Gross_up.OtherVar,m=>m.CreditToTax_Gross_up.ClauseRef,new string[]{"Yes","No"},new bool[]{true,false},Doc.CreditToTax_Gross_up.ClauseRef,Doc.CreditToTax_Gross_up.OtherVar)
-			</div>
+			<div class="upside-form">
+			<div><input id="CreditToTax_Gross_up_OtherVar" ng-model="data.CreditToTax_Gross_up.OtherVar" type="radio" ng-value="true" />Yes</div>
+
+			<input id="CreditToTax_Gross_up_OtherVar" ng-model="data.CreditToTax_Gross_up.OtherVar" type="radio" ng-value="false" />No</div>
+      		<div class="clauseform">
+			<input class="bigger" id="CreditToTax_Gross_up_ClauseRef" ng-model="data.CreditToTax_Gross_up.ClauseRef" type="text"  />
+		</div></div>
 				<div  style="height:250px;" class="sec">
 		<div class="sideline">2.9 </div>
 			<p style="margin-left:3%;">Does the credit agreement contain a negative pledge?</p>
-			@Html.DefaultClauseRadioListFor(m=>m.CreditToNegPledge.OtherVar,m=>m.CreditToNegPledge.ClauseRef,new string[]{"Yes","No"},new bool[]{true,false},Doc.CreditToNegPledge.ClauseRef,Doc.CreditToNegPledge.OtherVar)
-			</div>
+			<div class="upside-form">
+			<div><input id="CreditToNegPledge_OtherVar" ng-model="data.CreditToNegPledge.OtherVar" type="radio" ng-value="true" />Yes</div>
 
-				
+			<input id="CreditToNegPledge_OtherVar" ng-model="data.CreditToNegPledge.OtherVar" type="radio" ng-value="false" />No</div>
+      		<div class="clauseform">
+			<input class="bigger" id="CreditToNegPledge_ClauseRef" ng-model="data.CreditToNegPledge.ClauseRef" type="text"  />
+		</div></div>
 		<div  style="height:250px;" class="sec">
 		<div class="sideline">2.10 </div>
 			<p style="margin-left:3%;">Does the credit agreement contain a restriction <br> on incurring financial indebtedness?</p>
-						@Html.DefaultClauseRadioListFor(m=>m.CreditToRestriction_IncurrringIndebtedness.OtherVar,m=>m.CreditToRestriction_IncurrringIndebtedness.ClauseRef,new string[]{"Yes","No"},new bool[]{true,false},Doc.CreditToRestriction_IncurrringIndebtedness.ClauseRef,Doc.CreditToRestriction_IncurrringIndebtedness.OtherVar)
-		</div>
+			<div class="upside-form">
+			<div><input id="CreditToRestriction_IncurrringIndebtedness_OtherVar" ng-model="data.CreditToRestriction_IncurrringIndebtedness.OtherVar" type="radio" ng-value="true" />Yes</div>
+
+			<input id="CreditToRestriction_IncurrringIndebtedness_OtherVar" ng-model="data.CreditToRestriction_IncurrringIndebtedness.OtherVar" type="radio" ng-value="false" />No</div>
+      		<div class="clauseform">
+			<input class="bigger" id="CreditToRestriction_IncurrringIndebtedness_ClauseRef" ng-model="data.CreditToRestriction_IncurrringIndebtedness.ClauseRef" type="text"  />
+		</div></div>
 		<div  style="vertical-align:top; height:500px;" class="sec">
 		<div class="sideline">2.11 </div>
 			<p style="margin-left:3%;">Does the credit agreement contain the following financiall covenants</p>
@@ -349,16 +471,29 @@ if(b==true){
 			<ol type="a" style="">
 			<li class="liform">
 
+
+
 			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
 			<span style="">debt:EBITDA<br>(leverage)</span> 
-			@Html.DefaultNoUpsideClauseRadioListFor(m=>m.FinancialCovenants.debtLeverage.OtherVar,m=>m.FinancialCovenants.debtLeverage.ClauseRef,YesNo,new bool[]{true,false},Doc.FinancialCovenants.debtLeverage.ClauseRef,Doc.FinancialCovenants.debtLeverage.OtherVar)
+			<div><input id="FinancialCovenants_debtLeverage_OtherVar" ng-model="data.FinancialCovenants.debtLeverage.OtherVar" style="clear:both;" type="radio" ng-value="true" />Yes</div>
+			<div><input id="FinancialCovenants_debtLeverage_OtherVar" ng-model="data.FinancialCovenants.debtLeverage.OtherVar" style="clear:both;" type="radio" ng-value="false" />No</div>
 			</div>
+      		<div class="clauseform">
+			<input class="bigger" id="FinancialCovenants_debtLeverage_ClauseRef" ng-model="data.FinancialCovenants.debtLeverage.ClauseRef" type="text"  />
+			</div>
+
 				</li>
 			<li class="liform">
 
+
+
 			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
 			<span style="">EBITDA:interest<br>(interest cover)?</span> 
-			@Html.DefaultNoUpsideClauseRadioListFor(m=>m.FinancialCovenants.interestCover.OtherVar,m=>m.FinancialCovenants.interestCover.ClauseRef,YesNo,new bool[]{true,false},Doc.FinancialCovenants.interestCover.ClauseRef,Doc.FinancialCovenants.interestCover.OtherVar)
+			<div><input id="FinancialCovenants_interestCover_OtherVar" ng-model="data.FinancialCovenants.interestCover.OtherVar" style="clear:both;" type="radio" ng-value="true" />Yes</div>
+			<div><input id="FinancialCovenants_interestCover_OtherVar" ng-model="data.FinancialCovenants.interestCover.OtherVar" style="clear:both;" type="radio" ng-value="false" />No</div>
+			</div>
+      		<div class="clauseform">
+			<input class="bigger" id="FinancialCovenants_interestCover_ClauseRef" ng-model="data.FinancialCovenants.interestCover.ClauseRef" type="text"  />
 			</div>
 
 			</li>
@@ -368,7 +503,11 @@ if(b==true){
 
 			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
 			<span style="">Cashflow:debt<br>service costs<br>(cashflow cover)</span> 
-			@Html.DefaultNoUpsideClauseRadioListFor(m=>m.FinancialCovenants.CashflowCover.OtherVar,m=>m.FinancialCovenants.CashflowCover.ClauseRef,YesNo,new bool[]{true,false},Doc.FinancialCovenants.CashflowCover.ClauseRef,Doc.FinancialCovenants.CashflowCover.OtherVar)
+			<div><input id="FinancialCovenants_CashflowCover_OtherVar" ng-model="data.FinancialCovenants.CashflowCover.OtherVar" style="clear:both;" type="radio" ng-value="true" />Yes</div>
+			<div><input id="FinancialCovenants_CashflowCover_OtherVar" ng-model="data.FinancialCovenants.CashflowCover.OtherVar" style="clear:both;" type="radio" ng-value="false" />No</div>
+			</div>
+      		<div class="clauseform">
+			<input class="bigger" id="FinancialCovenants_CashflowCover_ClauseRef" ng-model="data.FinancialCovenants.CashflowCover.ClauseRef" type="text"  />
 			</div>
 
 			</li>
@@ -378,8 +517,11 @@ if(b==true){
 
 			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
 			<span style="">tangible net worth?<br>(leverage)</span> 
-			@Html.DefaultNoUpsideClauseRadioListFor(m=>m.FinancialCovenants.tangibleNetWorth.OtherVar,m=>m.FinancialCovenants.tangibleNetWorth.ClauseRef,YesNo,new bool[]{true,false},Doc.FinancialCovenants.tangibleNetWorth.ClauseRef,Doc.FinancialCovenants.tangibleNetWorth.OtherVar)
-
+			<div><input id="FinancialCovenants_tangibleNetWorth_OtherVar" ng-model="data.FinancialCovenants.tangibleNetWorth.OtherVar" style="clear:both;" type="radio" ng-value="true" />Yes</div>
+			<div><input id="FinancialCovenants_tangibleNetWorth_OtherVar" ng-model="data.FinancialCovenants.tangibleNetWorth.OtherVar" style="clear:both;" type="radio" ng-value="false" />No</div>
+			</div>
+      		<div class="clauseform">
+			<input class="bigger" id="FinancialCovenants_tangibleNetWorth_ClauseRef" ng-model="data.FinancialCovenants.tangibleNetWorth.ClauseRef" type="text"  />
 			</div>
 
 			</li>
@@ -388,10 +530,13 @@ if(b==true){
 			<div  style="height:250px;" class="sec">					
 		<div class="sideline">2.12 </div>
 			<p style="margin-left:3%;">Does the credit agreement <br> contain any other financial covenants</p>
+			<div class="upside-form">
+			<div><input id="MoreFinancialCovenants_OtherVar" ng-model="data.MoreFinancialCovenants.OtherVar" type="radio" ng-value="true" />Yes</div>
 
-			@Html.DefaultClauseRadioListFor(m=>m.MoreFinancialCovenants.OtherVar,m=>m.MoreFinancialCovenants.ClauseRef,YesNo,new bool[]{true,false},Doc.MoreFinancialCovenants.ClauseRef,Doc.MoreFinancialCovenants.OtherVar)
-
-			</div>
+			<input id="MoreFinancialCovenants_OtherVar" ng-model="data.MoreFinancialCovenants.OtherVar" type="radio" ng-value="false" />No</div>
+      		<div class="clauseform">
+			<input class="bigger" id="MoreFinancialCovenants_ClauseRef" ng-model="data.MoreFinancialCovenants.ClauseRef" type="text"  />
+		</div></div>
 			<div  style="vertical-align:top; height:2100px;" class="sec">
 		<div class="sideline">2.13 </div>
 			<p style="margin-left:3%;">Does the credit agreement contain obligations for the borrower to<br> provide the following to the agent/lenders:</p>
@@ -403,9 +548,12 @@ if(b==true){
 
 			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
 			<span style="">All documents dispatched by the borrower to<br> its shareholders or its creditors generally?</span> 
-			@Html.DefaultNoUpsideClauseRadioListFor(m=>m.ObligationCause.DocByBorrowToCreditors.OtherVar,m=>m.ObligationCause.DocByBorrowToCreditors.ClauseRef,YesNo,new bool[]{true,false},Doc.ObligationCause.DocByBorrowToCreditors.ClauseRef,Doc.ObligationCause.DocByBorrowToCreditors.OtherVar)
+			<div><input id="ObligationCause_DocByBorrowToCreditors_OtherVar" ng-model="data.ObligationCause.DocByBorrowToCreditors.OtherVar" style="clear:both;" type="radio" ng-value="true" />Yes</div>
+			<div><input id="ObligationCause_DocByBorrowToCreditors_OtherVar" ng-model="data.ObligationCause.DocByBorrowToCreditors.OtherVar" style="clear:both;" type="radio" ng-value="false" />No</div>
 			</div>
-      		
+      		<div class="clauseform">
+			<input class="bigger" id="ObligationCause_DocByBorrowToCreditors_ClauseRef" ng-model="data.ObligationCause.DocByBorrowToCreditors.ClauseRef" type="text"  />
+			</div>
 
 				</li>
 			<li class="liform">
@@ -414,8 +562,11 @@ if(b==true){
 
 			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
 			<span style="">Details of any litigation, arbitration or administrative<br>proceedings?</span> 
-			@Html.DefaultNoUpsideClauseRadioListFor(m=>m.ObligationCause.DetailLitArbAdminProcess.OtherVar,m=>m.ObligationCause.DetailLitArbAdminProcess.ClauseRef,YesNo,new bool[]{true,false},Doc.ObligationCause.DetailLitArbAdminProcess.ClauseRef,Doc.ObligationCause.DetailLitArbAdminProcess.OtherVar)
-
+			<div><input id="ObligationCause_DetailLitArbAdminProcess_OtherVar" ng-model="data.ObligationCause.DetailLitArbAdminProcess.OtherVar" style="clear:both;" type="radio" ng-value="true" />Yes</div>
+			<div><input id="ObligationCause_DetailLitArbAdminProcess_OtherVar" ng-model="data.ObligationCause.DetailLitArbAdminProcess.OtherVar" style="clear:both;" type="radio" ng-value="false" />No</div>
+			</div>
+      		<div class="clauseform">
+			<input class="bigger" id="ObligationCause_DetailLitArbAdminProcess_ClauseRef" ng-model="data.ObligationCause.DetailLitArbAdminProcess.ClauseRef" type="text"  />
 			</div>
 
 			</li>
@@ -425,11 +576,11 @@ if(b==true){
 
 			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
 			<span style="">Notification of any default?</span> 
-			<div>@Html.RadioButtonFor(m=>m.ObligationCause.NotificAnyDefault.OtherVar,true,new {@style="clear:both;"})Yes</div>
-			<div>@Html.RadioButtonFor(m=>m.ObligationCause.NotificAnyDefault.OtherVar,false,new {@style="clear:both;"})No</div>
+			<div><input id="ObligationCause_NotificAnyDefault_OtherVar" ng-model="data.ObligationCause.NotificAnyDefault.OtherVar" style="clear:both;" type="radio" ng-value="true" />Yes</div>
+			<div><input id="ObligationCause_NotificAnyDefault_OtherVar" ng-model="data.ObligationCause.NotificAnyDefault.OtherVar" style="clear:both;" type="radio" ng-value="false" />No</div>
 			</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.ObligationCause.NotificAnyDefault.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="ObligationCause_NotificAnyDefault_ClauseRef" ng-model="data.ObligationCause.NotificAnyDefault.ClauseRef" type="text"  />
 			</div>
 
 			</li>
@@ -439,11 +590,11 @@ if(b==true){
 
 			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
 			<span style="">Further information on request regarding the financial condition,<br> business or operations of any members of the group?</span> 
-			<div>@Html.RadioButtonFor(m=>m.ObligationCause.FurtherInfoRequestFinConBusOp.OtherVar,true,new {@style="clear:both;"})Yes</div>
-			<div>@Html.RadioButtonFor(m=>m.ObligationCause.FurtherInfoRequestFinConBusOp.OtherVar,false,new {@style="clear:both;"})No</div>
+			<div><input id="ObligationCause_FurtherInfoRequestFinConBusOp_OtherVar" ng-model="data.ObligationCause.FurtherInfoRequestFinConBusOp.OtherVar" style="clear:both;" type="radio" ng-value="true" />Yes</div>
+			<div><input id="ObligationCause_FurtherInfoRequestFinConBusOp_OtherVar" ng-model="data.ObligationCause.FurtherInfoRequestFinConBusOp.OtherVar" style="clear:both;" type="radio" ng-value="false" />No</div>
 			</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.PurposeClause.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="PurposeClause_ClauseRef" ng-model="data.ObligationCause.ClauseRef" type="text"  />
 			</div>
 
 			</li>
@@ -453,11 +604,11 @@ if(b==true){
 
 			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
 			<span style="">Notification of any change in ownership/shareholding of the borrower?</span> 
-			<div>@Html.RadioButtonFor(m=>m.ObligationCause.NotificChngeOwnerOfBorrow.OtherVar,true,new {@style="clear:both;"})Yes</div>
-			<div>@Html.RadioButtonFor(m=>m.ObligationCause.NotificChngeOwnerOfBorrow.OtherVar,false,new {@style="clear:both;"})No</div>
+			<div><input id="ObligationCause_NotificChngeOwnerOfBorrow_OtherVar" ng-model="data.ObligationCause.NotificChngeOwnerOfBorrow.OtherVar" style="clear:both;" type="radio" ng-value="true" />Yes</div>
+			<div><input id="ObligationCause_NotificChngeOwnerOfBorrow_OtherVar" ng-model="data.ObligationCause.NotificChngeOwnerOfBorrow.OtherVar" style="clear:both;" type="radio" ng-value="false" />No</div>
 			</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.ObligationCause.NotificChngeOwnerOfBorrow.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="ObligationCause_NotificChngeOwnerOfBorrow_ClauseRef" ng-model="data.ObligationCause.NotificChngeOwnerOfBorrow.ClauseRef" type="text"  />
 			</div>
 
 			</li>
@@ -467,11 +618,11 @@ if(b==true){
 
 			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
 			<span style="">Notification of any changes in the constitutive<br> documents of any obligor?</span> 
-			<div>@Html.RadioButtonFor(m=>m.ObligationCause.NotificChngeConstDocObligor.OtherVar,true,new {@style="clear:both;"})Yes</div>
-			<div>@Html.RadioButtonFor(m=>m.ObligationCause.NotificChngeConstDocObligor.OtherVar,false,new {@style="clear:both;"})No</div>
+			<div><input id="ObligationCause_NotificChngeConstDocObligor_OtherVar" ng-model="data.ObligationCause.NotificChngeConstDocObligor.OtherVar" style="clear:both;" type="radio" ng-value="true" />Yes</div>
+			<div><input id="ObligationCause_NotificChngeConstDocObligor_OtherVar" ng-model="data.ObligationCause.NotificChngeConstDocObligor.OtherVar" style="clear:both;" type="radio" ng-value="false" />No</div>
 			</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.ObligationCause.NotificChngeConstDocObligor.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="ObligationCause_NotificChngeConstDocObligor_ClauseRef" ng-model="data.ObligationCause.NotificChngeConstDocObligor.ClauseRef" type="text"  />
 			</div>
 
 			</li>
@@ -481,13 +632,13 @@ if(b==true){
 
 			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
 			<span style="">Consolidated annual<br> financial statements?</span> 
-			<div>@Html.RadioButtonFor(m=>m.ObligationCause.ConsAnnualFinancialStatement.Bool.OtherVar,true,new {@style="clear:both;"})Yes</div>
-			<div>@Html.RadioButtonFor(m=>m.ObligationCause.ConsAnnualFinancialStatement.Bool.OtherVar,false,new {@style="clear:both;"})No</div>
+			<div><input id="ObligationCause_ConsAnnualFinancialStatement_Bool_OtherVar" ng-model="data.ObligationCause.ConsAnnualFinancialStatement.Bool.OtherVar" style="clear:both;" type="radio" ng-value="true" />Yes</div>
+			<div><input id="ObligationCause_ConsAnnualFinancialStatement_Bool_OtherVar" ng-model="data.ObligationCause.ConsAnnualFinancialStatement.Bool.OtherVar" style="clear:both;" type="radio" ng-value="false" />No</div>
 			</div>
 			<div class="upside-form" style="position:relative;bottom:70px;left:20%;">
-			<input type="number" class="bigger" id="ObligationCause_ConsAnnualFinancialStatement_Number" name="ObligationCause.ConsAnnualFinancialStatement.Number"></div>
+			<input type="number" class="bigger" id="ObligationCause_ConsAnnualFinancialStatement_Number" ng-model="data.ObligationCause.ConsAnnualFinancialStatement.Number"></div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.ObligationCause.ConsAnnualFinancialStatement.Bool.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="ObligationCause_ConsAnnualFinancialStatement_Bool_ClauseRef" ng-model="data.ObligationCause.ConsAnnualFinancialStatement.Bool.ClauseRef" type="text"  />
 
 
 			</div>
@@ -499,14 +650,14 @@ if(b==true){
 
 			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
 			<span style="">Consolidated semi-annual<br> financial statements?</span> 
-			<div>@Html.RadioButtonFor(m=>m.ObligationCause.ConsSemiAnnualFinancialStatement.Bool.OtherVar,true,new {@style="clear:both;"})Yes</div>
-			<div>@Html.RadioButtonFor(m=>m.ObligationCause.ConsSemiAnnualFinancialStatement.Bool.OtherVar,false,new {@style="clear:both;"})No</div>
+			<div><input id="ObligationCause_ConsSemiAnnualFinancialStatement_Bool_OtherVar" ng-model="data.ObligationCause.ConsSemiAnnualFinancialStatement.Bool.OtherVar" style="clear:both;" type="radio" ng-value="true" />Yes</div>
+			<div><input id="ObligationCause_ConsSemiAnnualFinancialStatement_Bool_OtherVar" ng-model="data.ObligationCause.ConsSemiAnnualFinancialStatement.Bool.OtherVar" style="clear:both;" type="radio" ng-value="false" />No</div>
 			</div>
 			<div class="upside-form" style="position:relative;bottom:70px;left:20%;">
-			<input type="number" class="bigger" id="ObligationCause_ConsSemiAnnualFinancialStatement_Number" name="ObligationCause.ConsSemiAnnualFinancialStatement.Number">
+			<input type="number" class="bigger" id="ObligationCause_ConsSemiAnnualFinancialStatement_Number" ng-model="data.ObligationCause.ConsSemiAnnualFinancialStatement.Number">
 			</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.ObligationCause.ConsSemiAnnualFinancialStatement.Bool.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="ObligationCause_ConsSemiAnnualFinancialStatement_Bool_ClauseRef" ng-model="data.ObligationCause.ConsSemiAnnualFinancialStatement.Bool.ClauseRef" type="text"  />
 
 
 			</div>
@@ -518,14 +669,14 @@ if(b==true){
 
 			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
 			<span style="">Consolidated quarterly<br> financial statements</span> 
-			<div>@Html.RadioButtonFor(m=>m.ObligationCause.ConsQuartAnnualFinancialStatement.Bool.OtherVar,true,new {@style="clear:both;"})Yes</div>
-			<div>@Html.RadioButtonFor(m=>m.ObligationCause.ConsQuartAnnualFinancialStatement.Bool.OtherVar,false,new {@style="clear:both;"})No</div>
+			<div><input id="ObligationCause_ConsQuartAnnualFinancialStatement_Bool_OtherVar" ng-model="data.ObligationCause.ConsQuartAnnualFinancialStatement.Bool.OtherVar" style="clear:both;" type="radio" ng-value="true" />Yes</div>
+			<div><input id="ObligationCause_ConsQuartAnnualFinancialStatement_Bool_OtherVar" ng-model="data.ObligationCause.ConsQuartAnnualFinancialStatement.Bool.OtherVar" style="clear:both;" type="radio" ng-value="false" />No</div>
 			</div>
 			<div class="upside-form" style="position:relative;bottom:70px;left:20%;">
-			<input type="number" class="bigger" id="ObligationCause_ConsQuartAnnualFinancialStatement_Number" name="ObligationCause.ConsQuartAnnualFinancialStatement.Number">
+			<input type="number" class="bigger" id="ObligationCause_ConsQuartAnnualFinancialStatement_Number" ng-model="data.ObligationCause.ConsQuartAnnualFinancialStatement.Number">
 			</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.ObligationCause.ConsQuartAnnualFinancialStatement.Bool.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="ObligationCause_ConsQuartAnnualFinancialStatement_Bool_ClauseRef" ng-model="data.ObligationCause.ConsQuartAnnualFinancialStatement.Bool.ClauseRef" type="text"  />
 
 
 			</div>
@@ -537,14 +688,14 @@ if(b==true){
 
 			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
 			<span style="">Consolidated monthly<br> financial statements?</span> 
-			<div>@Html.RadioButtonFor(m=>m.ObligationCause.ConsMonthAnnualFinancialStatement.Bool.OtherVar,true,new {@style="clear:both;"})Yes</div>
-			<div>@Html.RadioButtonFor(m=>m.CreditToInterestRate,false,new {@style="clear:both;"})No</div>
+			<div><input id="ObligationCause_ConsMonthAnnualFinancialStatement_Bool_OtherVar" ng-model="data.ObligationCause.ConsMonthAnnualFinancialStatement.Bool.OtherVar" style="clear:both;" type="radio" ng-value="true" />Yes</div>
+			<div><input id="CreditToInterestRate" ng-model="data.CreditToInterestRate" style="clear:both;" type="radio" ng-value="false" />No</div>
 			</div>
 			<div class="upside-form" style="position:relative;bottom:70px;left:20%;">
-			<input type="number" class="bigger" id="ObligationCause_ConsMonthAnnualFinancialStatement_Number" name="ObligationCause.ConsMonthAnnualFinancialStatement.Number">
+			<input type="number" class="bigger" id="ObligationCause_ConsMonthAnnualFinancialStatement_Number" ng-model="data.ObligationCause.ConsMonthAnnualFinancialStatement.Number">
 			</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.ObligationCause.ConsMonthAnnualFinancialStatement.Bool.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="ObligationCause_ConsMonthAnnualFinancialStatement_Bool_ClauseRef" ng-model="data.ObligationCause.ConsMonthAnnualFinancialStatement.Bool.ClauseRef" type="text"  />
 
 
 			</div>
@@ -556,13 +707,13 @@ if(b==true){
 
 			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
 			<span style="">Unconsolidated annual<br> financial statements?</span> 
-			<div>@Html.RadioButtonFor(m=>m.ObligationCause.UnConsAnnualFinancialStatement.Bool.OtherVar,true,new {@style="clear:both;"})Yes</div>
-			<div>@Html.RadioButtonFor(m=>m.ObligationCause.UnConsAnnualFinancialStatement.Bool.OtherVar,false,new {@style="clear:both;"})No</div>
+			<div><input id="ObligationCause_UnConsAnnualFinancialStatement_Bool_OtherVar" ng-model="data.ObligationCause.UnConsAnnualFinancialStatement.Bool.OtherVar" style="clear:both;" type="radio" ng-value="true" />Yes</div>
+			<div><input id="ObligationCause_UnConsAnnualFinancialStatement_Bool_OtherVar" ng-model="data.ObligationCause.UnConsAnnualFinancialStatement.Bool.OtherVar" style="clear:both;" type="radio" ng-value="false" />No</div>
 			</div>
 			<div class="upside-form" style="position:relative;bottom:70px;left:20%;">
-			<input type="number" class="bigger" id="ObligationCause_UnConsAnnualFinancialStatement_Number" name="ObligationCause.UnConsAnnualFinancialStatement.Number"></div>
+			<input type="number" class="bigger" id="ObligationCause_UnConsAnnualFinancialStatement_Number" ng-model="data.ObligationCause.UnConsAnnualFinancialStatement.Number"></div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.ObligationCause.UnConsAnnualFinancialStatement.Bool.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="ObligationCause_UnConsAnnualFinancialStatement_Bool_ClauseRef" ng-model="data.ObligationCause.UnConsAnnualFinancialStatement.Bool.ClauseRef" type="text"  />
 
 
 			</div>
@@ -575,13 +726,13 @@ if(b==true){
 
 			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
 			<span style="">Unconsolidated semi-annual<br> financial statements?</span> 
-			<div>@Html.RadioButtonFor(m=>m.ObligationCause.UnConsSemiAnnualFinancialStatement.Bool.OtherVar,true,new {@style="clear:both;"})Yes</div>
-			<div>@Html.RadioButtonFor(m=>m.ObligationCause.UnConsSemiAnnualFinancialStatement.Bool.OtherVar,false,new {@style="clear:both;"})No</div>
+			<div><input id="ObligationCause_UnConsSemiAnnualFinancialStatement_Bool_OtherVar" ng-model="data.ObligationCause.UnConsSemiAnnualFinancialStatement.Bool.OtherVar" style="clear:both;" type="radio" ng-value="true" />Yes</div>
+			<div><input id="ObligationCause_UnConsSemiAnnualFinancialStatement_Bool_OtherVar" ng-model="data.ObligationCause.UnConsSemiAnnualFinancialStatement.Bool.OtherVar" style="clear:both;" type="radio" ng-value="false" />No</div>
 			</div>
 			<div class="upside-form" style="position:relative;bottom:70px;left:20%;">
-			<input type="number" class="bigger" id="ObligationCause_UnConsSemiAnnualFinancialStatement_Number" name="ObligationCause.UnConsSemiAnnualFinancialStatement.Number"></div>
+			<input type="number" class="bigger" id="ObligationCause_UnConsSemiAnnualFinancialStatement_Number" ng-model="data.ObligationCause.UnConsSemiAnnualFinancialStatement.Number"></div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.ObligationCause.UnConsSemiAnnualFinancialStatement.Bool.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="ObligationCause_UnConsSemiAnnualFinancialStatement_Bool_ClauseRef" ng-model="data.ObligationCause.UnConsSemiAnnualFinancialStatement.Bool.ClauseRef" type="text"  />
 
 
 			</div>
@@ -594,13 +745,13 @@ if(b==true){
 
 			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
 			<span style="">Unconsolidated quarterly <br> financial statements?</span> 
-			<div>@Html.RadioButtonFor(m=>m.ObligationCause.UnConsQuartAnnualFinancialStatement.Bool.OtherVar,true,new {@style="clear:both;"})Yes</div>
-			<div>@Html.RadioButtonFor(m=>m.ObligationCause.UnConsQuartAnnualFinancialStatement.Bool.OtherVar,false,new {@style="clear:both;"})No</div>
+			<div><input id="ObligationCause_UnConsQuartAnnualFinancialStatement_Bool_OtherVar" ng-model="data.ObligationCause.UnConsQuartAnnualFinancialStatement.Bool.OtherVar" style="clear:both;" type="radio" ng-value="true" />Yes</div>
+			<div><input id="ObligationCause_UnConsQuartAnnualFinancialStatement_Bool_OtherVar" ng-model="data.ObligationCause.UnConsQuartAnnualFinancialStatement.Bool.OtherVar" style="clear:both;" type="radio" ng-value="false" />No</div>
 			</div>
 			<div class="upside-form" style="position:relative;bottom:70px;left:20%;">
-			<input type="number" class="bigger" id="ObligationCause_UnConsQuartAnnualFinancialStatement_Number" name="ObligationCause.UnConsQuartAnnualFinancialStatement.Number"></div>
+			<input type="number" class="bigger" id="ObligationCause_UnConsQuartAnnualFinancialStatement_Number" ng-model="data.ObligationCause.UnConsQuartAnnualFinancialStatement.Number"></div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.ObligationCause.UnConsQuartAnnualFinancialStatement.Bool.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="ObligationCause_UnConsQuartAnnualFinancialStatement_Bool_ClauseRef" ng-model="data.ObligationCause.UnConsQuartAnnualFinancialStatement.Bool.ClauseRef" type="text"  />
 
 
 			</div>
@@ -612,13 +763,13 @@ if(b==true){
 
 			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
 			<span style="">Unconsolidated monthly<br> financial statements?</span> 
-			<div>@Html.RadioButtonFor(m=>m.ObligationCause.UnConsMonthAnnualFinancialStatement.Bool.OtherVar,true,new {@style="clear:both;"})Yes</div>
-			<div>@Html.RadioButtonFor(m=>m.ObligationCause.UnConsMonthAnnualFinancialStatement.Bool.OtherVar,false,new {@style="clear:both;"})No</div>
+			<div><input id="ObligationCause_UnConsMonthAnnualFinancialStatement_Bool_OtherVar" ng-model="data.ObligationCause.UnConsMonthAnnualFinancialStatement.Bool.OtherVar" style="clear:both;" type="radio" ng-value="true" />Yes</div>
+			<div><input id="ObligationCause_UnConsMonthAnnualFinancialStatement_Bool_OtherVar" ng-model="data.ObligationCause.UnConsMonthAnnualFinancialStatement.Bool.OtherVar" style="clear:both;" type="radio" ng-value="false" />No</div>
 			</div>
 			<div class="upside-form" style="position:relative;bottom:70px;left:20%;">
-			<input type="number" class="bigger" id="ObligationCause_UnConsMonthAnnualFinancialStatement_Number" name="ObligationCause.UnConsMonthAnnualFinancialStatement.Number"></div>
+			<input type="number" class="bigger" id="ObligationCause_UnConsMonthAnnualFinancialStatement_Number" ng-model="data.ObligationCause.UnConsMonthAnnualFinancialStatement.Number"></div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.ObligationCause.UnConsMonthAnnualFinancialStatement.Bool.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="ObligationCause_UnConsMonthAnnualFinancialStatement_Bool_ClauseRef" ng-model="data.ObligationCause.UnConsMonthAnnualFinancialStatement.Bool.ClauseRef" type="text"  />
 
 
 			</div>
@@ -632,8 +783,8 @@ if(b==true){
 		 <div class="sideline">2.14</div>
 			<p style="margin-left:3%;">Is a failure to pay an event of default?</p>
 			<div class="upside-form">
-			<div>@Html.RadioButtonFor(m=>m.IsFailPayEvent,true)Yes</div>
-			<div>@Html.RadioButtonFor(m=>m.IsFailPayEvent,false)No</div>
+			<div><input id="IsFailPayEvent" ng-model="data.IsFailPayEvent" type="radio" ng-value="true" />Yes</div>
+			<div><input id="IsFailPayEvent" ng-model="data.IsFailPayEvent" type="radio" ng-value="false" />No</div>
 			
 			</div>
 			</div>	
@@ -642,36 +793,38 @@ if(b==true){
 		<div class="sideline">2.15 </div>
 			<p style="margin-left:3%;">Is there a material adverse change event of default</p>
 			<div class="upside-form">
-			<div>@Html.RadioButtonFor(m=>m.MaterialAdverseChangeEvent.OtherVar,true)Yes</div>
+			<div><input id="MaterialAdverseChangeEvent_OtherVar" ng-model="data.MaterialAdverseChangeEvent.OtherVar" type="radio" ng-value="true" />Yes</div>
 
-			@Html.RadioButtonFor(m=>m.MaterialAdverseChangeEvent.OtherVar,false)No</div>
+			<input id="MaterialAdverseChangeEvent_OtherVar" ng-model="data.MaterialAdverseChangeEvent.OtherVar" type="radio" ng-value="false" />No</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.MaterialAdverseChangeEvent.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="MaterialAdverseChangeEvent_ClauseRef" ng-model="data.MaterialAdverseChangeEvent.ClauseRef" type="text"  />
 		</div></div><!--this is a multiple choice -->
 		<div  style="height:250px;" class="sec">					
 		<div class="sideline">2.16 </div>
 			<p style="margin-left:3%;"></p>
 			<div class="upside-form">
-			<div>@Html.RadioButtonFor(m=>m.ProvCrossDefault_CrossAccel.OtherVar,"cross-default")Cross-default</div>
+			<div><input  ng-model="data.ProvCrossDefault_CrossAccel.OtherVar" type="radio" value="cross-default" />Cross-default</div>
 
-			<div>@Html.RadioButtonFor(m=>m.ProvCrossDefault_CrossAccel.OtherVar,"cross-default_payment")Cross-default for payment, cross-acceleration for other defaults</div>
-			<div>@Html.RadioButtonFor(m=>m.ProvCrossDefault_CrossAccel.OtherVar,"cross-accel_default")cross-acceleration for all defaults</div>
-			<div>@Html.RadioButtonFor(m=>m.ProvCrossDefault_CrossAccel.OtherVar,"default")Default</div>
+			<div><input ng-model="data.ProvCrossDefault_CrossAccel.OtherVar" type="radio" value="cross-default_payment" />Cross-default for payment, cross-acceleration for other defaults</div>
+			<div><input ng-model="data.ProvCrossDefault_CrossAccel.OtherVar" type="radio" value="cross-accel_default" />cross-acceleration for all defaults</div>
+			<div><input ng-model="data.ProvCrossDefault_CrossAccel.OtherVar" type="radio" value="default" />Default</div>
 			</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.ProvCrossDefault_CrossAccel.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="ProvCrossDefault_CrossAccel_ClauseRef" ng-model="data.ProvCrossDefault_CrossAccel.ClauseRef" type="text"  />
 		</div></div>
 			<div  style="height:250px;" class="sec">
 		 <div class="sideline">2.17 </div>
 			<p style="margin-left:3%;">What is the cross-default or cross acceleration threshold?</p>
 			<div class="upside-form" style="width:20%;">
-			 @Html.DropDownListFor(m=>m.CrossDefOrAccelThresh.Bool.OtherVar,new SelectList(new string[]{"my dad","my mom"}),new {@class="bigger",@style="margin-top:0;height:35px;"})	
+			 <select class="bigger" id="CrossDefOrAccelThresh_Bool_OtherVar" ng-model="data.CrossDefOrAccelThresh.Bool.OtherVar" style="margin-top:0;height:35px;"><option>my dad</option>
+<option>my mom</option>
+</select>	
 						</div>
 			<div class="upside-form">
-       		@Html.TextBoxFor(m=>m.CrossDefOrAccelThresh.STRING,new {@class="bigger",@style=""})	
+       		<input class="bigger" id="CrossDefOrAccelThresh_STRING" ng-model="data.CrossDefOrAccelThresh.STRING" style="" type="text"  />	
       		</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.CrossDefOrAccelThresh.Bool.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="CrossDefOrAccelThresh_Bool_ClauseRef" ng-model="data.CrossDefOrAccelThresh.Bool.ClauseRef" type="text"  />
 			</div>	            
 		</div>
 		<div  style="height:250px;" class="sec">	
@@ -680,17 +833,17 @@ if(b==true){
 			<p style="margin-left:3%;">Does the credit agreement contain a <br> 
 			set off clause in favour of the bank?</p>
 			<div class="upside-form">
-			<div>@Html.RadioButtonFor(m=>m.CAgrContClauseFavBank.OtherVar,true)Yes</div>
+			<div><input id="CAgrContClauseFavBank_OtherVar" ng-model="data.CAgrContClauseFavBank.OtherVar" type="radio" ng-value="true" />Yes</div>
 
-			@Html.RadioButtonFor(m=>m.CAgrContClauseFavBank.OtherVar,false)No</div>
+			<input id="CAgrContClauseFavBank_OtherVar" ng-model="data.CAgrContClauseFavBank.OtherVar" type="radio" ng-value="false" />No</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.CAgrContClauseFavBank.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="CAgrContClauseFavBank_ClauseRef" ng-model="data.CAgrContClauseFavBank.ClauseRef" type="text"  />
 		</div></div>
 			<div  style="height:250px;" class="sec">
 		 <div class="sideline">2.19 </div>
 			<p style="margin-left:3%;">Governing law of principal credit agreement:</p>
 			<div class="upside-form">
-       		@Html.TextBoxFor(m=>m.GovLawPrincCAgr,new {@class="bigger",@Value="English"})	
+       		<input value="English" class="bigger" id="GovLawPrincCAgr" ng-model="data.GovLawPrincCAgr" type="text"  />	
       		</div>
 
 		</div>
@@ -698,11 +851,11 @@ if(b==true){
 		<div class="sideline">2.20 </div>
 			<p style="margin-left:3%;">Does the credit agreement provide for Arbitration></p>
 			<div class="upside-form">
-			<div>@Html.RadioButtonFor(m=>m.CAPArbitration.OtherVar,true)Yes</div>
+			<div><input id="CAPArbitration_OtherVar" ng-model="data.CAPArbitration.OtherVar" type="radio" ng-value="true" />Yes</div>
 
-			@Html.RadioButtonFor(m=>m.CAPArbitration.OtherVar,false)No</div>
+			<input id="CAPArbitration_OtherVar" ng-model="data.CAPArbitration.OtherVar" type="radio" ng-value="false" />No</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.CAPArbitration.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="CAPArbitration_ClauseRef" ng-model="data.CAPArbitration.ClauseRef" type="text"  />
 		</div></div>
 			<!--moo-->	
 			</div>
@@ -718,52 +871,53 @@ if(b==true){
 		<div class="sideline">3.1 </div>
 			<p style="margin-left:3%;">Voting level for most decisions?</p>
 			<div class="upside-form">
-			<div>@Html.RadioButtonFor(m=>m.VoteOnPerameter.OtherVar,true)66<sup>2</sup>/<sub>3</sub></div>
+			<div><input id="VoteOnPerameter_OtherVar" ng-model="data.VoteOnPerameter.OtherVar" type="radio" ng-value="true" />66<sup>2</sup>/<sub>3</sub></div>
 
-			@Html.RadioButtonFor(m=>m.VoteOnPerameter.OtherVar,false)No</div>
+			<input id="VoteOnPerameter_OtherVar" ng-model="data.VoteOnPerameter.OtherVar" type="radio" ng-value="false" />No</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.PurposeClause.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="PurposeClause_ClauseRef" ng-model="data.VoteOnPerameter.ClauseRef" type="text"  />
 		</div></div>
 		<div style="height:250px;" class="sec">
 		<div class="sideline">3.2 </div>
 			<p style="margin-left:3%;">Can a lender split its commitments/loans when voting?</p>
 			<div class="upside-form">
-			<div>@Html.RadioButtonFor(m=>m.LenderSplitCommitLoansVote.OtherVar,"Yes")Yes</div>
-			<div>@Html.RadioButtonFor(m=>m.LenderSplitCommitLoansVote.OtherVar,"No")No</div>
-			<div>@Html.RadioButtonFor(m=>m.LenderSplitCommitLoansVote.OtherVar,"not_stated")Not Stated</div>
+			<div><input id="LenderSplitCommitLoansVote_OtherVar" ng-model="data.LenderSplitCommitLoansVote.OtherVar" type="radio" value="Yes" />Yes</div>
+			<div><input id="LenderSplitCommitLoansVote_OtherVar" ng-model="data.LenderSplitCommitLoansVote.OtherVar" type="radio" value="No" />No</div>
+			<div><input id="LenderSplitCommitLoansVote_OtherVar" ng-model="data.LenderSplitCommitLoansVote.OtherVar" type="radio" value="not_stated" />Not Stated</div>
 			</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.LenderSplitCommitLoansVote.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="LenderSplitCommitLoansVote_ClauseRef" ng-model="data.LenderSplitCommitLoansVote.ClauseRef" type="text"  />
 			</div>
 			</div>
 		<div style="height:250px;" class="sec">
 		<div class="sideline">3.2 </div>
 			<p style="margin-left:3%;">Details of split voting (if applicable):</p>
 			<div class="upside-form">
-			@Html.TextAreaFor(m=>m.SplitVoteDetail.OtherVar,new {@class="bigger",@style="height:100px;"})
+			<textarea class="bigger" cols="20" id="SplitVoteDetail_OtherVar" ng-model="data.SplitVoteDetail.OtherVar" rows="2" style="height:100px;">
+</textarea>
 			</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.SplitVoteDetail.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="SplitVoteDetail_ClauseRef" ng-model="data.SplitVoteDetail.ClauseRef" type="text"  />
 		</div></div>
 		<div  style="height:250px;" class="sec">
 		<div class="sideline">3.4 </div>
 			<p style="margin-left:3%;">Can the hedge counterparties vote before enforcement?</p>
 			<div class="upside-form">
-			<div>@Html.RadioButtonFor(m=>m.HedgeBeforeEnf.OtherVar,true)Yes</div>
+			<div><input id="HedgeBeforeEnf_OtherVar" ng-model="data.HedgeBeforeEnf.OtherVar" type="radio" ng-value="true" />Yes</div>
 
-			@Html.RadioButtonFor(m=>m.HedgeBeforeEnf.OtherVar,false)No</div>
+			<input id="HedgeBeforeEnf_OtherVar" ng-model="data.HedgeBeforeEnf.OtherVar" type="radio" ng-value="false" />No</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.HedgeBeforeEnf.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="HedgeBeforeEnf_ClauseRef" ng-model="data.HedgeBeforeEnf.ClauseRef" type="text"  />
 		</div></div>
 		<div  style="height:250px;" class="sec">
 		<div class="sideline">3.5 </div>
 			<p style="margin-left:3%;">Can the hedge counterparties vote after enforcement?</p>
 			<div class="upside-form">
-			<div>@Html.RadioButtonFor(m=>m.HedgeAfterEnf.OtherVar,true)Yes</div>
+			<div><input id="HedgeAfterEnf_OtherVar" ng-model="data.HedgeAfterEnf.OtherVar" type="radio" ng-value="true" />Yes</div>
 
-			@Html.RadioButtonFor(m=>m.HedgeAfterEnf.OtherVar,false)No</div>
+			<input id="HedgeAfterEnf_OtherVar" ng-model="data.HedgeAfterEnf.OtherVar" type="radio" ng-value="false" />No</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.HedgeAfterEnf.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="HedgeAfterEnf_ClauseRef" ng-model="data.HedgeAfterEnf.ClauseRef" type="text"  />
 		</div></div>
 
 				</div>
@@ -779,98 +933,99 @@ if(b==true){
 				name, Jurisdiction and wether they are a Borrower, Guarantor<br>
 				and/or Security,Provider on a new line for each below</p>
 			<div class="upside-form">
-			@Html.TextAreaFor(m=>m.ObligorNameJurJob.OtherVar,new {@class="bigger",@style="height:80px;"})
+			<textarea class="bigger" cols="20" id="ObligorNameJurJob_OtherVar" ng-model="data.ObligorNameJurJob.OtherVar" rows="2" style="height:80px;">
+</textarea>
 			</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.ObligorNameJurJob.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="ObligorNameJurJob_ClauseRef" ng-model="data.ObligorNameJurJob.ClauseRef" type="text"  />
 		</div></div>
 	<div  style="height:250px;" class="sec">
 		<div class="sideline">4.2 </div>
 			<p style="margin-left:3%;">Do all guarantors guarantee all borrowings?</p>
 			<div class="upside-form">
-			<div>@Html.RadioButtonFor(m=>m.GuarantorsGuarantAllBorrow.OtherVar,true)Yes</div>
+			<div><input id="GuarantorsGuarantAllBorrow_OtherVar" ng-model="data.GuarantorsGuarantAllBorrow.OtherVar" type="radio" ng-value="true" />Yes</div>
 
-			@Html.RadioButtonFor(m=>m.GuarantorsGuarantAllBorrow.OtherVar,false)No</div>
+			<input id="GuarantorsGuarantAllBorrow_OtherVar" ng-model="data.GuarantorsGuarantAllBorrow.OtherVar" type="radio" ng-value="false" />No</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.GuarantorsGuarantAllBorrow.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="GuarantorsGuarantAllBorrow_ClauseRef" ng-model="data.GuarantorsGuarantAllBorrow.ClauseRef" type="text"  />
 		</div></div>
 	<div  style="height:250px;" class="sec">
 		<div class="sideline">4.3 </div>
 			<p style="margin-left:3%;">Does the agreement allow additional borrowers?</p>
 			<div class="upside-form">
-			<div>@Html.RadioButtonFor(m=>m.DoesAgreeAllowAddBorrow.OtherVar,true)Yes</div>
+			<div><input id="DoesAgreeAllowAddBorrow_OtherVar" ng-model="data.DoesAgreeAllowAddBorrow.OtherVar" type="radio" ng-value="true" />Yes</div>
 
-			@Html.RadioButtonFor(m=>m.DoesAgreeAllowAddBorrow.OtherVar,false)No</div>
+			<input id="DoesAgreeAllowAddBorrow_OtherVar" ng-model="data.DoesAgreeAllowAddBorrow.OtherVar" type="radio" ng-value="false" />No</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.DoesAgreeAllowAddBorrow.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="DoesAgreeAllowAddBorrow_ClauseRef" ng-model="data.DoesAgreeAllowAddBorrow.ClauseRef" type="text"  />
 		</div></div>
 		<div  style="height:250px;" class="sec">					
 		<div class="sideline">4.4</div>
 			<p style="margin-left:3%;">Consent level for additional borrowers in existing jurisdiction</p>
 			<div class="upside-form">
-			<div>@Html.RadioButtonFor(m=>m.ConsLvlAdditionBorrowersExstJur.OtherVar,"all")All lenders</div>
+			<div><input id="ConsLvlAdditionBorrowersExstJur_OtherVar" ng-model="data.ConsLvlAdditionBorrowersExstJur.OtherVar" type="radio" value="all" />All lenders</div>
 
-			<div>@Html.RadioButtonFor(m=>m.ConsLvlAdditionBorrowersExstJur.OtherVar,"majority")Majority lender (66<sup>2</sup>/<sub>3</sub> %)</div>
-			<div>@Html.RadioButtonFor(m=>m.ConsLvlAdditionBorrowersExstJur.OtherVar,"none")None</div>
-			<div>@Html.RadioButtonFor(m=>m.ConsLvlAdditionBorrowersExstJur.OtherVar,"non standard")Non standard consent level<br>
+			<div><input id="ConsLvlAdditionBorrowersExstJur_OtherVar" ng-model="data.ConsLvlAdditionBorrowersExstJur.OtherVar" type="radio" value="majority" />Majority lender (66<sup>2</sup>/<sub>3</sub> %)</div>
+			<div><input id="ConsLvlAdditionBorrowersExstJur_OtherVar" ng-model="data.ConsLvlAdditionBorrowersExstJur.OtherVar" type="radio" value="none" />None</div>
+			<div><input id="ConsLvlAdditionBorrowersExstJur_OtherVar" ng-model="data.ConsLvlAdditionBorrowersExstJur.OtherVar" type="radio" value="non standard" />Non standard consent level<br>
 				(i.e. Not all lender or majority lender(66<sup>2</sup>/<sub>3</sub> %))</div>
 			</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.ConsLvlAdditionBorrowersExstJur.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="ConsLvlAdditionBorrowersExstJur_ClauseRef" ng-model="data.ConsLvlAdditionBorrowersExstJur.ClauseRef" type="text"  />
 		</div></div>
 		<div  style="height:250px;" class="sec">					
 		<div class="sideline">4.5 </div>
 			<p style="margin-left:3%;">Consent level for additional borrowers in new jurisdiction</p>
 			<div class="upside-form">
-			<div>@Html.RadioButtonFor(m=>m.ConsLvlAdditionBorrowersExstJur.OtherVar,"all")All lenders</div>
+			<div><input id="ConsLvlAdditionBorrowersExstJur_OtherVar" ng-model="data.ConsLvlAdditionBorrowersExstJur.OtherVar" type="radio" value="all" />All lenders</div>
 
-			<div>@Html.RadioButtonFor(m=>m.ConsLvlAdditionBorrowersNewJur.OtherVar,"majority")Majority lender (66<sup>2</sup>/<sub>3</sub> %)</div>
-			<div>@Html.RadioButtonFor(m=>m.ConsLvlAdditionBorrowersNewJur.OtherVar,"none")None</div>
-			<div>@Html.RadioButtonFor(m=>m.ConsLvlAdditionBorrowersNewJur.OtherVar,"non standard")Non standard consent level<br>
+			<div><input id="ConsLvlAdditionBorrowersNewJur_OtherVar" ng-model="data.ConsLvlAdditionBorrowersNewJur.OtherVar" type="radio" value="majority" />Majority lender (66<sup>2</sup>/<sub>3</sub> %)</div>
+			<div><input id="ConsLvlAdditionBorrowersNewJur_OtherVar" ng-model="data.ConsLvlAdditionBorrowersNewJur.OtherVar" type="radio" value="none" />None</div>
+			<div><input id="ConsLvlAdditionBorrowersNewJur_OtherVar" ng-model="data.ConsLvlAdditionBorrowersNewJur.OtherVar" type="radio" value="non standard" />Non standard consent level<br>
 				(i.e. Not all lender or majority lender(66<sup>2</sup>/<sub>3</sub> %))</div>
 			</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.ConsLvlAdditionBorrowersExstJur.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="ConsLvlAdditionBorrowersExstJur_ClauseRef" ng-model="data.ConsLvlAdditionBorrowersExstJur.ClauseRef" type="text"  />
 		</div></div>
 		<div  style="height:250px;" class="sec">
 		<div class="sideline">4.6 </div>
 			<p style="margin-left:3%;">Does the agreement allow additional guarantors?</p>
 			<div class="upside-form">
-			<div>@Html.RadioButtonFor(m=>m.DoesAgreeAllowAddGuarantors.OtherVar,true)Yes</div>
+			<div><input id="DoesAgreeAllowAddGuarantors_OtherVar" ng-model="data.DoesAgreeAllowAddGuarantors.OtherVar" type="radio" ng-value="true" />Yes</div>
 
-			@Html.RadioButtonFor(m=>m.DoesAgreeAllowAddGuarantors.OtherVar,false)No</div>
+			<input id="DoesAgreeAllowAddGuarantors_OtherVar" ng-model="data.DoesAgreeAllowAddGuarantors.OtherVar" type="radio" ng-value="false" />No</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.DoesAgreeAllowAddGuarantors.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="DoesAgreeAllowAddGuarantors_ClauseRef" ng-model="data.DoesAgreeAllowAddGuarantors.ClauseRef" type="text"  />
 		</div></div>
 				
 		<div  style="height:250px;" class="sec">					
 		<div class="sideline">4.7 </div>
 			<p style="margin-left:3%;">Consent level for additional guarantors in existing jurisdiction</p>
 			<div class="upside-form">
-			<div>@Html.RadioButtonFor(m=>m.ConsLvlAdditionGuarantorsExstJur.OtherVar,"all")All lenders</div>
+			<div><input id="ConsLvlAdditionGuarantorsExstJur_OtherVar" ng-model="data.ConsLvlAdditionGuarantorsExstJur.OtherVar" type="radio" value="all" />All lenders</div>
 
-			<div>@Html.RadioButtonFor(m=>m.ConsLvlAdditionGuarantorsExstJur.OtherVar,"majority")Majority lender (66<sup>2</sup>/<sub>3</sub> %)</div>
-			<div>@Html.RadioButtonFor(m=>m.ConsLvlAdditionGuarantorsExstJur.OtherVar,"none")None</div>
-			<div>@Html.RadioButtonFor(m=>m.ConsLvlAdditionGuarantorsExstJur.OtherVar,"non standard")Non standard consent level<br>
+			<div><input id="ConsLvlAdditionGuarantorsExstJur_OtherVar" ng-model="data.ConsLvlAdditionGuarantorsExstJur.OtherVar" type="radio" value="majority" />Majority lender (66<sup>2</sup>/<sub>3</sub> %)</div>
+			<div><input id="ConsLvlAdditionGuarantorsExstJur_OtherVar" ng-model="data.ConsLvlAdditionGuarantorsExstJur.OtherVar" type="radio" value="none" />None</div>
+			<div><input id="ConsLvlAdditionGuarantorsExstJur_OtherVar" ng-model="data.ConsLvlAdditionGuarantorsExstJur.OtherVar" type="radio" value="non standard" />Non standard consent level<br>
 				(i.e. Not all lender or majority lender(66<sup>2</sup>/<sub>3</sub> %))</div>
 			</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.ConsLvlAdditionGuarantorsExstJur.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="ConsLvlAdditionGuarantorsExstJur_ClauseRef" ng-model="data.ConsLvlAdditionGuarantorsExstJur.ClauseRef" type="text"  />
 		</div></div>
 				
 		<div  style="height:250px;" class="sec">					
 		<div class="sideline">4.8 </div>
 			<p style="margin-left:3%;">Consent level for additional guarantors in new jurisdiction</p>
 			<div class="upside-form">
-			<div>@Html.RadioButtonFor(m=>m.ConsLvlAdditionGuarantorsNewJur.OtherVar,"all")All lenders</div>
+			<div><input id="ConsLvlAdditionGuarantorsNewJur_OtherVar" ng-model="data.ConsLvlAdditionGuarantorsNewJur.OtherVar" type="radio" value="all" />All lenders</div>
 
-			<div>@Html.RadioButtonFor(m=>m.ConsLvlAdditionGuarantorsNewJur.OtherVar,"majority")Majority lender (66<sup>2</sup>/<sub>3</sub> %)</div>
-			<div>@Html.RadioButtonFor(m=>m.ConsLvlAdditionGuarantorsNewJur.OtherVar,"none")None</div>
-			<div>@Html.RadioButtonFor(m=>m.ConsLvlAdditionGuarantorsNewJur.OtherVar,"non standard")Non standard consent level<br>
+			<div><input id="ConsLvlAdditionGuarantorsNewJur_OtherVar" ng-model="data.ConsLvlAdditionGuarantorsNewJur.OtherVar" type="radio" value="majority" />Majority lender (66<sup>2</sup>/<sub>3</sub> %)</div>
+			<div><input id="ConsLvlAdditionGuarantorsNewJur_OtherVar" ng-model="data.ConsLvlAdditionGuarantorsNewJur.OtherVar" type="radio" value="none" />None</div>
+			<div><input id="ConsLvlAdditionGuarantorsNewJur_OtherVar" ng-model="data.ConsLvlAdditionGuarantorsNewJur.OtherVar" type="radio" value="non standard" />Non standard consent level<br>
 				(i.e. Not all lender or majority lender(66<sup>2</sup>/<sub>3</sub> %))</div>
 			</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.ConsLvlAdditionGuarantorsNewJur.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="ConsLvlAdditionGuarantorsNewJur_ClauseRef" ng-model="data.ConsLvlAdditionGuarantorsNewJur.ClauseRef" type="text"  />
 		</div></div>
 
 				
@@ -887,9 +1042,9 @@ if(b==true){
 		<div class="sideline">5.1 </div>
 			<p style="margin-left:3%;">Is there security?</p>
 			<div class="upside-form">
-			<div>@Html.RadioButtonFor(m=>m.IsSecurity,true)Yes</div>
+			<div><input id="IsSecurity" ng-model="data.IsSecurity" type="radio" ng-value="true" />Yes</div>
 
-			@Html.RadioButtonFor(m=>m.IsSecurity,false)No</div>
+			<input id="IsSecurity" ng-model="data.IsSecurity" type="radio" ng-value="false" />No</div>
       		</div>
 
 				
@@ -897,14 +1052,15 @@ if(b==true){
 		<div class="sideline">5.2 </div>
 			<p style="margin-left:3%;">Brief description of security</p>
 			<div class="upside-form">
-			@Html.TextAreaFor(m=>m.SecurityDescrip,new {@class="bigger",@style="height:100px;"})
+			<textarea class="bigger" cols="20" id="SecurityDescrip" ng-model="data.SecurityDescrip" rows="2" style="height:100px;">
+</textarea>
 			</div>
       		</div>
       			<div  style="height:250px;" class="sec">
 		 <div class="sideline">5.3 </div>
 			<p style="margin-left:3%;">What laws govern the security agreement?</p>
 			<div class="upside-form">
-       		@Html.TextBoxFor(m=>m.LawsGovSecurity,new {@class="bigger",@Value="English"})	
+       		<input value="English" class="bigger" id="LawsGovSecurity" ng-model="data.LawsGovSecurity" type="text"  />	
       		</div>
 
 		</div>
@@ -912,25 +1068,25 @@ if(b==true){
 			<div class="sideline">5.4 </div>
 			<p style="margin-left:3%;">Is there an intercreditor/subordination/priority agreement?</p>
 			<div class="upside-form">
-			<div>@Html.RadioButtonFor(m=>m.IsIntercreditorAgreement,true)Yes</div>
+			<div><input id="IsIntercreditorAgreement" ng-model="data.IsIntercreditorAgreement" type="radio" ng-value="true" />Yes</div>
 
-			@Html.RadioButtonFor(m=>m.IsIntercreditorAgreement,false)No</div>
+			<input id="IsIntercreditorAgreement" ng-model="data.IsIntercreditorAgreement" type="radio" ng-value="false" />No</div>
       		</div>
 			<div  style="height:250px;" class="sec">
 			<div class="sideline">5.5 </div>
 			<p style="margin-left:3%;">Do the hedge counterparties benefit from the security?</p>
 			<div class="upside-form">
-			<div>@Html.RadioButtonFor(m=>m.SecurityBenefitHedge,true)Yes</div>
+			<div><input id="SecurityBenefitHedge" ng-model="data.SecurityBenefitHedge" type="radio" ng-value="true" />Yes</div>
 
-			@Html.RadioButtonFor(m=>m.SecurityBenefitHedge,false)No</div>
+			<input id="SecurityBenefitHedge" ng-model="data.SecurityBenefitHedge" type="radio" ng-value="false" />No</div>
       		</div>
 			<div  style="height:250px;" class="sec">
 			<div class="sideline">5.6 </div>
 			<p style="margin-left:3%;">Have original documents been provided to the security trustee?</p>
 			<div class="upside-form">
-			<div>@Html.RadioButtonFor(m=>m.IsOriginalDocProvidedToSecurityTrust,true)Yes</div>
+			<div><input id="IsOriginalDocProvidedToSecurityTrust" ng-model="data.IsOriginalDocProvidedToSecurityTrust" type="radio" ng-value="true" />Yes</div>
 
-			@Html.RadioButtonFor(m=>m.IsOriginalDocProvidedToSecurityTrust,false)No</div>
+			<input id="IsOriginalDocProvidedToSecurityTrust" ng-model="data.IsOriginalDocProvidedToSecurityTrust" type="radio" ng-value="false" />No</div>
       		</div>
 
 			
@@ -943,21 +1099,12 @@ if(b==true){
 
 			</div>
 			<div class="moo" style="height:100%;">	
-		@{
-		string[][] s=new string[][]{
-		new string[]
-		{"When an event of default is outstanding, are the following permitted","DefaultEvent"},
-		new string[]
-		{"When no event of default is outstanding, are the following permitted?","NoDefaultEvent"}
-		};
-	
-		}
-		@for(var x=0; x<s.Length; x++){
+
 			<div  style="vertical-align:top; height:1500px;" class="sec">
 
 		
-		<div class="sideline">6.@(x+1)</div>
-			<p style="margin-left:3%;">@s[x][0]</p>
+		<div class="sideline">6.1</div>
+			<p style="margin-left:3%;">When an event of default is outstanding, are the following permitted</p>
 
 			<ol type="a" style="">
 			<li class="liform">
@@ -966,14 +1113,14 @@ if(b==true){
 
 			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
 			<span style="">Transfer to other lenders:</span> 
-			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].TransferOtherLend.OtherVar,"with-consent(unreasonable)",new {@style="clear:both;"})With consent<br> (no requirement for reasonableness)</div>
-			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].TransferOtherLend.OtherVar,"with-consent(reasonable)",new {@style="clear:both;"})With consent<br> (not to be unreasonably withheld)</div>
-			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].TransferOtherLend.OtherVar,"with-consultation",new {@style="clear:both;"}) With consultation</div>
-			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].TransferOtherLend.OtherVar,"with-no-consultation",new {@style="clear:both;"})With no consent or consultation</div>
-			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].TransferOtherLend.OtherVar,"Other",new {@style="clear:both;"})Other (non-standard consent/consultation rights)</div>
+			<div><input id="DefaultnoDefault_0__TransferOtherLend_OtherVar" ng-model="data.DefaultnoDefault[0].TransferOtherLend.OtherVar" style="clear:both;" type="radio" value="with-consent(unreasonable)" />With consent<br> (no requirement for reasonableness)</div>
+			<div><input id="DefaultnoDefault_0__TransferOtherLend_OtherVar" ng-model="data.DefaultnoDefault[0].TransferOtherLend.OtherVar" style="clear:both;" type="radio" value="with-consent(reasonable)" />With consent<br> (not to be unreasonably withheld)</div>
+			<div><input id="DefaultnoDefault_0__TransferOtherLend_OtherVar" ng-model="data.DefaultnoDefault[0].TransferOtherLend.OtherVar" style="clear:both;" type="radio" value="with-consultation" /> With consultation</div>
+			<div><input id="DefaultnoDefault_0__TransferOtherLend_OtherVar" ng-model="data.DefaultnoDefault[0].TransferOtherLend.OtherVar" style="clear:both;" type="radio" value="with-no-consultation" />With no consent or consultation</div>
+			<div><input id="DefaultnoDefault_0__TransferOtherLend_OtherVar" ng-model="data.DefaultnoDefault[0].TransferOtherLend.OtherVar" style="clear:both;" type="radio" value="Other" />Other (non-standard consent/consultation rights)</div>
 			</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.DefaultnoDefault[x].TransferOtherLend.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="DefaultnoDefault_0__TransferOtherLend_ClauseRef" ng-model="data.DefaultnoDefault[0].TransferOtherLend.ClauseRef" type="text"  />
 			</div>
 
 				</li>
@@ -983,14 +1130,14 @@ if(b==true){
 
 			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
 			<span style="">b. Disclosure to other lenders:(leverage)</span> 
-			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].DisclosureOtherLend.OtherVar,"with-consent(unreasonable)",new {@style="clear:both;"})With consent<br> (no requirement for reasonableness)</div>
-			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].DisclosureOtherLend.OtherVar,"with-consent(reasonable)",new {@style="clear:both;"})With consent<br> (not to be unreasonably withheld)</div>
-			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].DisclosureOtherLend.OtherVar,"with-consultation",new {@style="clear:both;"}) With consultation</div>
-			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].DisclosureOtherLend.OtherVar,"with-no-consultation",new {@style="clear:both;"})With no consent or consultation</div>
-			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].DisclosureOtherLend.OtherVar,"Other",new {@style="clear:both;"})Other (non-standard consent/consultation rights)</div>
+			<div><input id="DefaultnoDefault_0__DisclosureOtherLend_OtherVar" ng-model="data.DefaultnoDefault[0].DisclosureOtherLend.OtherVar" style="clear:both;" type="radio" value="with-consent(unreasonable)" />With consent<br> (no requirement for reasonableness)</div>
+			<div><input id="DefaultnoDefault_0__DisclosureOtherLend_OtherVar" ng-model="data.DefaultnoDefault[0].DisclosureOtherLend.OtherVar" style="clear:both;" type="radio" value="with-consent(reasonable)" />With consent<br> (not to be unreasonably withheld)</div>
+			<div><input id="DefaultnoDefault_0__DisclosureOtherLend_OtherVar" ng-model="data.DefaultnoDefault[0].DisclosureOtherLend.OtherVar" style="clear:both;" type="radio" value="with-consultation" /> With consultation</div>
+			<div><input id="DefaultnoDefault_0__DisclosureOtherLend_OtherVar" ng-model="data.DefaultnoDefault[0].DisclosureOtherLend.OtherVar" style="clear:both;" type="radio" value="with-no-consultation" />With no consent or consultation</div>
+			<div><input id="DefaultnoDefault_0__DisclosureOtherLend_OtherVar" ng-model="data.DefaultnoDefault[0].DisclosureOtherLend.OtherVar" style="clear:both;" type="radio" value="Other" />Other (non-standard consent/consultation rights)</div>
 			</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.DefaultnoDefault[x].DisclosureOtherLend.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="DefaultnoDefault_0__DisclosureOtherLend_ClauseRef" ng-model="data.DefaultnoDefault[0].DisclosureOtherLend.ClauseRef" type="text"  />
 			</div>
 				</li>
 			<li class="liform">
@@ -999,14 +1146,14 @@ if(b==true){
 
 			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
 			<span style="">Transfer to banks and financial institutions:</span> 
-			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].TransferBankNFinancialInst.OtherVar,"with-consent(unreasonable)",new {@style="clear:both;"})With consent<br> (no requirement for reasonableness)</div>
-			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].TransferBankNFinancialInst.OtherVar,"with-consent(reasonable)",new {@style="clear:both;"})With consent<br> (not to be unreasonably withheld)</div>
-			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].TransferBankNFinancialInst.OtherVar,"with-consultation",new {@style="clear:both;"}) With consultation</div>
-			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].TransferBankNFinancialInst.OtherVar,"with-no-consultation",new {@style="clear:both;"})With no consent or consultation</div>
-			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].TransferBankNFinancialInst.OtherVar,"Other",new {@style="clear:both;"})Other (non-standard consent/consultation rights)</div>
+			<div><input id="DefaultnoDefault_0__TransferBankNFinancialInst_OtherVar" ng-model="data.DefaultnoDefault[0].TransferBankNFinancialInst.OtherVar" style="clear:both;" type="radio" value="with-consent(unreasonable)" />With consent<br> (no requirement for reasonableness)</div>
+			<div><input id="DefaultnoDefault_0__TransferBankNFinancialInst_OtherVar" ng-model="data.DefaultnoDefault[0].TransferBankNFinancialInst.OtherVar" style="clear:both;" type="radio" value="with-consent(reasonable)" />With consent<br> (not to be unreasonably withheld)</div>
+			<div><input id="DefaultnoDefault_0__TransferBankNFinancialInst_OtherVar" ng-model="data.DefaultnoDefault[0].TransferBankNFinancialInst.OtherVar" style="clear:both;" type="radio" value="with-consultation" /> With consultation</div>
+			<div><input id="DefaultnoDefault_0__TransferBankNFinancialInst_OtherVar" ng-model="data.DefaultnoDefault[0].TransferBankNFinancialInst.OtherVar" style="clear:both;" type="radio" value="with-no-consultation" />With no consent or consultation</div>
+			<div><input id="DefaultnoDefault_0__TransferBankNFinancialInst_OtherVar" ng-model="data.DefaultnoDefault[0].TransferBankNFinancialInst.OtherVar" style="clear:both;" type="radio" value="Other" />Other (non-standard consent/consultation rights)</div>
 			</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.DefaultnoDefault[x].TransferBankNFinancialInst.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="DefaultnoDefault_0__TransferBankNFinancialInst_ClauseRef" ng-model="data.DefaultnoDefault[0].TransferBankNFinancialInst.ClauseRef" type="text"  />
 			</div>
 
 				</li>
@@ -1016,14 +1163,14 @@ if(b==true){
 
 			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
 			<span style="">Disclosure to banks and financial institutions</span> 
-			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].DisclosureBankNFinancialInst.OtherVar,"with-consent(unreasonable)",new {@style="clear:both;"})With consent<br> (no requirement for reasonableness)</div>
-			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].DisclosureBankNFinancialInst.OtherVar,"with-consent(reasonable)",new {@style="clear:both;"})With consent<br> (not to be unreasonably withheld)</div>
-			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].DisclosureBankNFinancialInst.OtherVar,"with-consultation",new {@style="clear:both;"}) With consultation</div>
-			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].DisclosureBankNFinancialInst.OtherVar,"with-no-consultation",new {@style="clear:both;"})With no consent or consultation</div>
-			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].DisclosureBankNFinancialInst.OtherVar,"Other",new {@style="clear:both;"})Other (non-standard consent/consultation rights)</div>
+			<div><input id="DefaultnoDefault_0__DisclosureBankNFinancialInst_OtherVar" ng-model="data.DefaultnoDefault[0].DisclosureBankNFinancialInst.OtherVar" style="clear:both;" type="radio" value="with-consent(unreasonable)" />With consent<br> (no requirement for reasonableness)</div>
+			<div><input id="DefaultnoDefault_0__DisclosureBankNFinancialInst_OtherVar" ng-model="data.DefaultnoDefault[0].DisclosureBankNFinancialInst.OtherVar" style="clear:both;" type="radio" value="with-consent(reasonable)" />With consent<br> (not to be unreasonably withheld)</div>
+			<div><input id="DefaultnoDefault_0__DisclosureBankNFinancialInst_OtherVar" ng-model="data.DefaultnoDefault[0].DisclosureBankNFinancialInst.OtherVar" style="clear:both;" type="radio" value="with-consultation" /> With consultation</div>
+			<div><input id="DefaultnoDefault_0__DisclosureBankNFinancialInst_OtherVar" ng-model="data.DefaultnoDefault[0].DisclosureBankNFinancialInst.OtherVar" style="clear:both;" type="radio" value="with-no-consultation" />With no consent or consultation</div>
+			<div><input id="DefaultnoDefault_0__DisclosureBankNFinancialInst_OtherVar" ng-model="data.DefaultnoDefault[0].DisclosureBankNFinancialInst.OtherVar" style="clear:both;" type="radio" value="Other" />Other (non-standard consent/consultation rights)</div>
 			</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.DefaultnoDefault[x].DisclosureBankNFinancialInst.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="DefaultnoDefault_0__DisclosureBankNFinancialInst_ClauseRef" ng-model="data.DefaultnoDefault[0].DisclosureBankNFinancialInst.ClauseRef" type="text"  />
 			</div>
 				</li>
 			<li class="liform">
@@ -1035,14 +1182,14 @@ if(b==true){
 							or entity regularly engaged<br> 
 							or established for the purpose of making<br> 
 							loans(i.e. any potential counterparty)?</span> 
-			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].TransferAnyEntitMakesLoans.OtherVar,"with-consent(unreasonable)",new {@style="clear:both;"})With consent<br> (no requirement for reasonableness)</div>
-			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].TransferAnyEntitMakesLoans.OtherVar,"with-consent(reasonable)",new {@style="clear:both;"})With consent<br> (not to be unreasonably withheld)</div>
-			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].TransferAnyEntitMakesLoans.OtherVar,"with-consultation",new {@style="clear:both;"}) With consultation</div>
-			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].TransferAnyEntitMakesLoans.OtherVar,"with-no-consultation",new {@style="clear:both;"})With no consent or consultation</div>
-			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].TransferAnyEntitMakesLoans.OtherVar,"Other",new {@style="clear:both;"})Other (non-standard consent/consultation rights)</div>
+			<div><input id="DefaultnoDefault_0__TransferAnyEntitMakesLoans_OtherVar" ng-model="data.DefaultnoDefault[0].TransferAnyEntitMakesLoans.OtherVar" style="clear:both;" type="radio" value="with-consent(unreasonable)" />With consent<br> (no requirement for reasonableness)</div>
+			<div><input id="DefaultnoDefault_0__TransferAnyEntitMakesLoans_OtherVar" ng-model="data.DefaultnoDefault[0].TransferAnyEntitMakesLoans.OtherVar" style="clear:both;" type="radio" value="with-consent(reasonable)" />With consent<br> (not to be unreasonably withheld)</div>
+			<div><input id="DefaultnoDefault_0__TransferAnyEntitMakesLoans_OtherVar" ng-model="data.DefaultnoDefault[0].TransferAnyEntitMakesLoans.OtherVar" style="clear:both;" type="radio" value="with-consultation" /> With consultation</div>
+			<div><input id="DefaultnoDefault_0__TransferAnyEntitMakesLoans_OtherVar" ng-model="data.DefaultnoDefault[0].TransferAnyEntitMakesLoans.OtherVar" style="clear:both;" type="radio" value="with-no-consultation" />With no consent or consultation</div>
+			<div><input id="DefaultnoDefault_0__TransferAnyEntitMakesLoans_OtherVar" ng-model="data.DefaultnoDefault[0].TransferAnyEntitMakesLoans.OtherVar" style="clear:both;" type="radio" value="Other" />Other (non-standard consent/consultation rights)</div>
 			</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.DefaultnoDefault[x].TransferAnyEntitMakesLoans.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="DefaultnoDefault_0__TransferAnyEntitMakesLoans_ClauseRef" ng-model="data.DefaultnoDefault[0].TransferAnyEntitMakesLoans.ClauseRef" type="text"  />
 			</div>
 
 				</li>
@@ -1055,14 +1202,14 @@ if(b==true){
 							or entity regularly engaged<br> 
 							or established for the purpose of making<br> 
 							loans(i.e. any potential counterparty)?</span> 
-		<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].DisclosureAnyEntitMakesLoans.OtherVar,"with-consent(unreasonable)",new {@style="clear:both;"})With consent<br> (no requirement for reasonableness)</div>
-			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].DisclosureAnyEntitMakesLoans.OtherVar,"with-consent(reasonable)",new {@style="clear:both;"})With consent<br> (not to be unreasonably withheld)</div>
-			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].DisclosureAnyEntitMakesLoans.OtherVar,"with-consultation",new {@style="clear:both;"}) With consultation</div>
-			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].DisclosureAnyEntitMakesLoans.OtherVar,"with-no-consultation",new {@style="clear:both;"})With no consent or consultation</div>
-			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].DisclosureAnyEntitMakesLoans.OtherVar,"Other",new {@style="clear:both;"})Other (non-standard consent/consultation rights)</div>
+		<div><input id="DefaultnoDefault_0__DisclosureAnyEntitMakesLoans_OtherVar" ng-model="data.DefaultnoDefault[0].DisclosureAnyEntitMakesLoans.OtherVar" style="clear:both;" type="radio" value="with-consent(unreasonable)" />With consent<br> (no requirement for reasonableness)</div>
+			<div><input id="DefaultnoDefault_0__DisclosureAnyEntitMakesLoans_OtherVar" ng-model="data.DefaultnoDefault[0].DisclosureAnyEntitMakesLoans.OtherVar" style="clear:both;" type="radio" value="with-consent(reasonable)" />With consent<br> (not to be unreasonably withheld)</div>
+			<div><input id="DefaultnoDefault_0__DisclosureAnyEntitMakesLoans_OtherVar" ng-model="data.DefaultnoDefault[0].DisclosureAnyEntitMakesLoans.OtherVar" style="clear:both;" type="radio" value="with-consultation" /> With consultation</div>
+			<div><input id="DefaultnoDefault_0__DisclosureAnyEntitMakesLoans_OtherVar" ng-model="data.DefaultnoDefault[0].DisclosureAnyEntitMakesLoans.OtherVar" style="clear:both;" type="radio" value="with-no-consultation" />With no consent or consultation</div>
+			<div><input id="DefaultnoDefault_0__DisclosureAnyEntitMakesLoans_OtherVar" ng-model="data.DefaultnoDefault[0].DisclosureAnyEntitMakesLoans.OtherVar" style="clear:both;" type="radio" value="Other" />Other (non-standard consent/consultation rights)</div>
 			</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.DefaultnoDefault[x].DisclosureAnyEntitMakesLoans.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="DefaultnoDefault_0__DisclosureAnyEntitMakesLoans_ClauseRef" ng-model="data.DefaultnoDefault[0].DisclosureAnyEntitMakesLoans.ClauseRef" type="text"  />
 			</div>
 				</li>
 			<li class="liform">
@@ -1071,73 +1218,205 @@ if(b==true){
 
 			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
 			<span style="">Is there a requirement for any potential transferee<br> to be regulated, hold a banking licence, etc?</span> 
-			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].AnyRequirPotentTransfereeRegulate.OtherVar,"with-consent(unreasonable)",new {@style="clear:both;"})With consent<br> (no requirement for reasonableness)</div>
-			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].AnyRequirPotentTransfereeRegulate.OtherVar,"with-consent(reasonable)",new {@style="clear:both;"})With consent<br> (not to be unreasonably withheld)</div>
-			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].AnyRequirPotentTransfereeRegulate.OtherVar,"with-consultation",new {@style="clear:both;"}) With consultation</div>
-			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].AnyRequirPotentTransfereeRegulate.OtherVar,"with-no-consultation",new {@style="clear:both;"})With no consent or consultation</div>
-			<div>@Html.RadioButtonFor(m=>m.DefaultnoDefault[x].AnyRequirPotentTransfereeRegulate.OtherVar,"Other",new {@style="clear:both;"})Other (non-standard consent/consultation rights)</div>
+			<div><input id="DefaultnoDefault_0__AnyRequirPotentTransfereeRegulate_OtherVar" ng-model="data.DefaultnoDefault[0].AnyRequirPotentTransfereeRegulate.OtherVar" style="clear:both;" type="radio" value="with-consent(unreasonable)" />With consent<br> (no requirement for reasonableness)</div>
+			<div><input id="DefaultnoDefault_0__AnyRequirPotentTransfereeRegulate_OtherVar" ng-model="data.DefaultnoDefault[0].AnyRequirPotentTransfereeRegulate.OtherVar" style="clear:both;" type="radio" value="with-consent(reasonable)" />With consent<br> (not to be unreasonably withheld)</div>
+			<div><input id="DefaultnoDefault_0__AnyRequirPotentTransfereeRegulate_OtherVar" ng-model="data.DefaultnoDefault[0].AnyRequirPotentTransfereeRegulate.OtherVar" style="clear:both;" type="radio" value="with-consultation" /> With consultation</div>
+			<div><input id="DefaultnoDefault_0__AnyRequirPotentTransfereeRegulate_OtherVar" ng-model="data.DefaultnoDefault[0].AnyRequirPotentTransfereeRegulate.OtherVar" style="clear:both;" type="radio" value="with-no-consultation" />With no consent or consultation</div>
+			<div><input id="DefaultnoDefault_0__AnyRequirPotentTransfereeRegulate_OtherVar" ng-model="data.DefaultnoDefault[0].AnyRequirPotentTransfereeRegulate.OtherVar" style="clear:both;" type="radio" value="Other" />Other (non-standard consent/consultation rights)</div>
 			</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.DefaultnoDefault[x].AnyRequirPotentTransfereeRegulate.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="DefaultnoDefault_0__AnyRequirPotentTransfereeRegulate_ClauseRef" ng-model="data.DefaultnoDefault[0].AnyRequirPotentTransfereeRegulate.ClauseRef" type="text"  />
 			</div>
 				</li>
 			
 			</ol> </div>
-			}
+			<div  style="vertical-align:top; height:1500px;" class="sec">
+
+		
+		<div class="sideline">6.2</div>
+			<p style="margin-left:3%;">When no event of default is outstanding, are the following permitted?</p>
+
+			<ol type="a" style="">
+			<li class="liform">
+
+
+
+			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
+			<span style="">Transfer to other lenders:</span> 
+			<div><input id="DefaultnoDefault_1__TransferOtherLend_OtherVar" ng-model="data.DefaultnoDefault[1].TransferOtherLend.OtherVar" style="clear:both;" type="radio" value="with-consent(unreasonable)" />With consent<br> (no requirement for reasonableness)</div>
+			<div><input id="DefaultnoDefault_1__TransferOtherLend_OtherVar" ng-model="data.DefaultnoDefault[1].TransferOtherLend.OtherVar" style="clear:both;" type="radio" value="with-consent(reasonable)" />With consent<br> (not to be unreasonably withheld)</div>
+			<div><input id="DefaultnoDefault_1__TransferOtherLend_OtherVar" ng-model="data.DefaultnoDefault[1].TransferOtherLend.OtherVar" style="clear:both;" type="radio" value="with-consultation" /> With consultation</div>
+			<div><input id="DefaultnoDefault_1__TransferOtherLend_OtherVar" ng-model="data.DefaultnoDefault[1].TransferOtherLend.OtherVar" style="clear:both;" type="radio" value="with-no-consultation" />With no consent or consultation</div>
+			<div><input id="DefaultnoDefault_1__TransferOtherLend_OtherVar" ng-model="data.DefaultnoDefault[1].TransferOtherLend.OtherVar" style="clear:both;" type="radio" value="Other" />Other (non-standard consent/consultation rights)</div>
+			</div>
+      		<div class="clauseform">
+			<input class="bigger" id="DefaultnoDefault_1__TransferOtherLend_ClauseRef" ng-model="data.DefaultnoDefault[1].TransferOtherLend.ClauseRef" type="text"  />
+			</div>
+
+				</li>
+			<li class="liform">
+
+
+
+			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
+			<span style="">b. Disclosure to other lenders:(leverage)</span> 
+			<div><input id="DefaultnoDefault_1__DisclosureOtherLend_OtherVar" ng-model="data.DefaultnoDefault[1].DisclosureOtherLend.OtherVar" style="clear:both;" type="radio" value="with-consent(unreasonable)" />With consent<br> (no requirement for reasonableness)</div>
+			<div><input id="DefaultnoDefault_1__DisclosureOtherLend_OtherVar" ng-model="data.DefaultnoDefault[1].DisclosureOtherLend.OtherVar" style="clear:both;" type="radio" value="with-consent(reasonable)" />With consent<br> (not to be unreasonably withheld)</div>
+			<div><input id="DefaultnoDefault_1__DisclosureOtherLend_OtherVar" ng-model="data.DefaultnoDefault[1].DisclosureOtherLend.OtherVar" style="clear:both;" type="radio" value="with-consultation" /> With consultation</div>
+			<div><input id="DefaultnoDefault_1__DisclosureOtherLend_OtherVar" ng-model="data.DefaultnoDefault[1].DisclosureOtherLend.OtherVar" style="clear:both;" type="radio" value="with-no-consultation" />With no consent or consultation</div>
+			<div><input id="DefaultnoDefault_1__DisclosureOtherLend_OtherVar" ng-model="data.DefaultnoDefault[1].DisclosureOtherLend.OtherVar" style="clear:both;" type="radio" value="Other" />Other (non-standard consent/consultation rights)</div>
+			</div>
+      		<div class="clauseform">
+			<input class="bigger" id="DefaultnoDefault_1__DisclosureOtherLend_ClauseRef" ng-model="data.DefaultnoDefault[1].DisclosureOtherLend.ClauseRef" type="text"  />
+			</div>
+				</li>
+			<li class="liform">
+
+
+
+			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
+			<span style="">Transfer to banks and financial institutions:</span> 
+			<div><input id="DefaultnoDefault_1__TransferBankNFinancialInst_OtherVar" ng-model="data.DefaultnoDefault[1].TransferBankNFinancialInst.OtherVar" style="clear:both;" type="radio" value="with-consent(unreasonable)" />With consent<br> (no requirement for reasonableness)</div>
+			<div><input id="DefaultnoDefault_1__TransferBankNFinancialInst_OtherVar" ng-model="data.DefaultnoDefault[1].TransferBankNFinancialInst.OtherVar" style="clear:both;" type="radio" value="with-consent(reasonable)" />With consent<br> (not to be unreasonably withheld)</div>
+			<div><input id="DefaultnoDefault_1__TransferBankNFinancialInst_OtherVar" ng-model="data.DefaultnoDefault[1].TransferBankNFinancialInst.OtherVar" style="clear:both;" type="radio" value="with-consultation" /> With consultation</div>
+			<div><input id="DefaultnoDefault_1__TransferBankNFinancialInst_OtherVar" ng-model="data.DefaultnoDefault[1].TransferBankNFinancialInst.OtherVar" style="clear:both;" type="radio" value="with-no-consultation" />With no consent or consultation</div>
+			<div><input id="DefaultnoDefault_1__TransferBankNFinancialInst_OtherVar" ng-model="data.DefaultnoDefault[1].TransferBankNFinancialInst.OtherVar" style="clear:both;" type="radio" value="Other" />Other (non-standard consent/consultation rights)</div>
+			</div>
+      		<div class="clauseform">
+			<input class="bigger" id="DefaultnoDefault_1__TransferBankNFinancialInst_ClauseRef" ng-model="data.DefaultnoDefault[1].TransferBankNFinancialInst.ClauseRef" type="text"  />
+			</div>
+
+				</li>
+			<li class="liform">
+
+
+
+			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
+			<span style="">Disclosure to banks and financial institutions</span> 
+			<div><input id="DefaultnoDefault_1__DisclosureBankNFinancialInst_OtherVar" ng-model="data.DefaultnoDefault[1].DisclosureBankNFinancialInst.OtherVar" style="clear:both;" type="radio" value="with-consent(unreasonable)" />With consent<br> (no requirement for reasonableness)</div>
+			<div><input id="DefaultnoDefault_1__DisclosureBankNFinancialInst_OtherVar" ng-model="data.DefaultnoDefault[1].DisclosureBankNFinancialInst.OtherVar" style="clear:both;" type="radio" value="with-consent(reasonable)" />With consent<br> (not to be unreasonably withheld)</div>
+			<div><input id="DefaultnoDefault_1__DisclosureBankNFinancialInst_OtherVar" ng-model="data.DefaultnoDefault[1].DisclosureBankNFinancialInst.OtherVar" style="clear:both;" type="radio" value="with-consultation" /> With consultation</div>
+			<div><input id="DefaultnoDefault_1__DisclosureBankNFinancialInst_OtherVar" ng-model="data.DefaultnoDefault[1].DisclosureBankNFinancialInst.OtherVar" style="clear:both;" type="radio" value="with-no-consultation" />With no consent or consultation</div>
+			<div><input id="DefaultnoDefault_1__DisclosureBankNFinancialInst_OtherVar" ng-model="data.DefaultnoDefault[1].DisclosureBankNFinancialInst.OtherVar" style="clear:both;" type="radio" value="Other" />Other (non-standard consent/consultation rights)</div>
+			</div>
+      		<div class="clauseform">
+			<input class="bigger" id="DefaultnoDefault_1__DisclosureBankNFinancialInst_ClauseRef" ng-model="data.DefaultnoDefault[1].DisclosureBankNFinancialInst.ClauseRef" type="text"  />
+			</div>
+				</li>
+			<li class="liform">
+
+
+
+			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
+			<span style="">Transfer to any other person,trust,fund<br> 
+							or entity regularly engaged<br> 
+							or established for the purpose of making<br> 
+							loans(i.e. any potential counterparty)?</span> 
+			<div><input id="DefaultnoDefault_1__TransferAnyEntitMakesLoans_OtherVar" ng-model="data.DefaultnoDefault[1].TransferAnyEntitMakesLoans.OtherVar" style="clear:both;" type="radio" value="with-consent(unreasonable)" />With consent<br> (no requirement for reasonableness)</div>
+			<div><input id="DefaultnoDefault_1__TransferAnyEntitMakesLoans_OtherVar" ng-model="data.DefaultnoDefault[1].TransferAnyEntitMakesLoans.OtherVar" style="clear:both;" type="radio" value="with-consent(reasonable)" />With consent<br> (not to be unreasonably withheld)</div>
+			<div><input id="DefaultnoDefault_1__TransferAnyEntitMakesLoans_OtherVar" ng-model="data.DefaultnoDefault[1].TransferAnyEntitMakesLoans.OtherVar" style="clear:both;" type="radio" value="with-consultation" /> With consultation</div>
+			<div><input id="DefaultnoDefault_1__TransferAnyEntitMakesLoans_OtherVar" ng-model="data.DefaultnoDefault[1].TransferAnyEntitMakesLoans.OtherVar" style="clear:both;" type="radio" value="with-no-consultation" />With no consent or consultation</div>
+			<div><input id="DefaultnoDefault_1__TransferAnyEntitMakesLoans_OtherVar" ng-model="data.DefaultnoDefault[1].TransferAnyEntitMakesLoans.OtherVar" style="clear:both;" type="radio" value="Other" />Other (non-standard consent/consultation rights)</div>
+			</div>
+      		<div class="clauseform">
+			<input class="bigger" id="DefaultnoDefault_1__TransferAnyEntitMakesLoans_ClauseRef" ng-model="data.DefaultnoDefault[1].TransferAnyEntitMakesLoans.ClauseRef" type="text"  />
+			</div>
+
+				</li>
+			<li class="liform">
+
+
+
+			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
+			<span style="">Disclosure to any other person,trust,fund<br> 
+							or entity regularly engaged<br> 
+							or established for the purpose of making<br> 
+							loans(i.e. any potential counterparty)?</span> 
+		<div><input id="DefaultnoDefault_1__DisclosureAnyEntitMakesLoans_OtherVar" ng-model="data.DefaultnoDefault[1].DisclosureAnyEntitMakesLoans.OtherVar" style="clear:both;" type="radio" value="with-consent(unreasonable)" />With consent<br> (no requirement for reasonableness)</div>
+			<div><input id="DefaultnoDefault_1__DisclosureAnyEntitMakesLoans_OtherVar" ng-model="data.DefaultnoDefault[1].DisclosureAnyEntitMakesLoans.OtherVar" style="clear:both;" type="radio" value="with-consent(reasonable)" />With consent<br> (not to be unreasonably withheld)</div>
+			<div><input id="DefaultnoDefault_1__DisclosureAnyEntitMakesLoans_OtherVar" ng-model="data.DefaultnoDefault[1].DisclosureAnyEntitMakesLoans.OtherVar" style="clear:both;" type="radio" value="with-consultation" /> With consultation</div>
+			<div><input id="DefaultnoDefault_1__DisclosureAnyEntitMakesLoans_OtherVar" ng-model="data.DefaultnoDefault[1].DisclosureAnyEntitMakesLoans.OtherVar" style="clear:both;" type="radio" value="with-no-consultation" />With no consent or consultation</div>
+			<div><input id="DefaultnoDefault_1__DisclosureAnyEntitMakesLoans_OtherVar" ng-model="data.DefaultnoDefault[1].DisclosureAnyEntitMakesLoans.OtherVar" style="clear:both;" type="radio" value="Other" />Other (non-standard consent/consultation rights)</div>
+			</div>
+      		<div class="clauseform">
+			<input class="bigger" id="DefaultnoDefault_1__DisclosureAnyEntitMakesLoans_ClauseRef" ng-model="data.DefaultnoDefault[1].DisclosureAnyEntitMakesLoans.ClauseRef" type="text"  />
+			</div>
+				</li>
+			<li class="liform">
+
+
+
+			<div style="width:50%;position:relative; margin-left:0px; margin-top:12px;">
+			<span style="">Is there a requirement for any potential transferee<br> to be regulated, hold a banking licence, etc?</span> 
+			<div><input id="DefaultnoDefault_1__AnyRequirPotentTransfereeRegulate_OtherVar" ng-model="data.DefaultnoDefault[1].AnyRequirPotentTransfereeRegulate.OtherVar" style="clear:both;" type="radio" value="with-consent(unreasonable)" />With consent<br> (no requirement for reasonableness)</div>
+			<div><input id="DefaultnoDefault_1__AnyRequirPotentTransfereeRegulate_OtherVar" ng-model="data.DefaultnoDefault[1].AnyRequirPotentTransfereeRegulate.OtherVar" style="clear:both;" type="radio" value="with-consent(reasonable)" />With consent<br> (not to be unreasonably withheld)</div>
+			<div><input id="DefaultnoDefault_1__AnyRequirPotentTransfereeRegulate_OtherVar" ng-model="data.DefaultnoDefault[1].AnyRequirPotentTransfereeRegulate.OtherVar" style="clear:both;" type="radio" value="with-consultation" /> With consultation</div>
+			<div><input id="DefaultnoDefault_1__AnyRequirPotentTransfereeRegulate_OtherVar" ng-model="data.DefaultnoDefault[1].AnyRequirPotentTransfereeRegulate.OtherVar" style="clear:both;" type="radio" value="with-no-consultation" />With no consent or consultation</div>
+			<div><input id="DefaultnoDefault_1__AnyRequirPotentTransfereeRegulate_OtherVar" ng-model="data.DefaultnoDefault[1].AnyRequirPotentTransfereeRegulate.OtherVar" style="clear:both;" type="radio" value="Other" />Other (non-standard consent/consultation rights)</div>
+			</div>
+      		<div class="clauseform">
+			<input class="bigger" id="DefaultnoDefault_1__AnyRequirPotentTransfereeRegulate_ClauseRef" ng-model="data.DefaultnoDefault[1].AnyRequirPotentTransfereeRegulate.ClauseRef" type="text"  />
+			</div>
+				</li>
+			
+			</ol> </div>
 			<div  style="height:250px;" class="sec">
 		<div class="sideline">6.3 </div>
 			<p style="margin-left:3%;">Would a potential transferee be required to<br> 
 										enter into a non disclosure agreement? </p>
 			<div class="upside-form">
-			<div>@Html.RadioButtonFor(m=>m.PotentTransfereeRequirEntNondisclosureAgree.OtherVar,true)Yes</div>
+			<div><input id="PotentTransfereeRequirEntNondisclosureAgree_OtherVar" ng-model="data.PotentTransfereeRequirEntNondisclosureAgree.OtherVar" type="radio" ng-value="true" />Yes</div>
 
-			@Html.RadioButtonFor(m=>m.PotentTransfereeRequirEntNondisclosureAgree.OtherVar,false)No</div>
+			<input id="PotentTransfereeRequirEntNondisclosureAgree_OtherVar" ng-model="data.PotentTransfereeRequirEntNondisclosureAgree.OtherVar" type="radio" ng-value="false" />No</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.PotentTransfereeRequirEntNondisclosureAgree.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="PotentTransfereeRequirEntNondisclosureAgree_ClauseRef" ng-model="data.PotentTransfereeRequirEntNondisclosureAgree.ClauseRef" type="text"  />
 		</div></div>
 			<div  style="height:250px;" class="sec">
 		<div class="sideline">6.4 </div>
 			<p style="margin-left:3%;">If consent is required for any transfer,<br>is it deemed given if not refused?</p>
 			<div class="upside-form">
-			<div>@Html.RadioButtonFor(m=>m.WhenConsRequirForTransferGivenNoRefuse.OtherVar,true)Yes</div>
+			<div><input id="WhenConsRequirForTransferGivenNoRefuse_OtherVar" ng-model="data.WhenConsRequirForTransferGivenNoRefuse.OtherVar" type="radio" ng-value="true" />Yes</div>
 
-			@Html.RadioButtonFor(m=>m.WhenConsRequirForTransferGivenNoRefuse.OtherVar,false)No</div>
+			<input id="WhenConsRequirForTransferGivenNoRefuse_OtherVar" ng-model="data.WhenConsRequirForTransferGivenNoRefuse.OtherVar" type="radio" ng-value="false" />No</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.WhenConsRequirForTransferGivenNoRefuse.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="WhenConsRequirForTransferGivenNoRefuse_ClauseRef" ng-model="data.WhenConsRequirForTransferGivenNoRefuse.ClauseRef" type="text"  />
 		</div></div>
 			<div  style="height:250px;" class="sec">
 		<div class="sideline">6.5 </div>
 			<p style="margin-left:3%;">If the consent of any issuing bank, agent or trustee
 					<br> required for a transfer?</p>
 			<div class="upside-form">
-			<div>@Html.RadioButtonFor(m=>m.ISConsentIssueBankRequirTrans.OtherVar,true)Yes</div>
+			<div><input id="ISConsentIssueBankRequirTrans_OtherVar" ng-model="data.ISConsentIssueBankRequirTrans.OtherVar" type="radio" ng-value="true" />Yes</div>
 
-			@Html.RadioButtonFor(m=>m.ISConsentIssueBankRequirTrans.OtherVar,false)No</div>
+			<input id="ISConsentIssueBankRequirTrans_OtherVar" ng-model="data.ISConsentIssueBankRequirTrans.OtherVar" type="radio" ng-value="false" />No</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.ISConsentIssueBankRequirTrans.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="ISConsentIssueBankRequirTrans_ClauseRef" ng-model="data.ISConsentIssueBankRequirTrans.ClauseRef" type="text"  />
 		</div></div>
 
 			<div style="height:250px;" class="sec">
 		<div class="sideline">6.6 </div>
 			<p style="margin-left:3%;">In exceptional circumstances only,<br> please provide any other relevant information for transfer</p>
 			<div class="upside-form">
-			@Html.TextAreaFor(m=>m.ExceptionalCircRelevInf.OtherVar,new {@class="bigger",@style="height:100px;"})
+			<textarea class="bigger" cols="20" id="ExceptionalCircRelevInf_OtherVar" ng-model="data.ExceptionalCircRelevInf.OtherVar" rows="2" style="height:100px;">
+</textarea>
 			</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.ExceptionalCircRelevInf.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="ExceptionalCircRelevInf_ClauseRef" ng-model="data.ExceptionalCircRelevInf.ClauseRef" type="text"  />
 		</div></div>
 		<div  style="height:250px;" class="sec">
 		 <div class="sideline">6.7 </div>
 			<p style="margin-left:3%;">Minimum transfer amout:</p>
 			<div class="upside-form" style="width:20%;">Currency:
-			 @Html.DropDownListFor(m=>m.minTransAmount.Bool.OtherVar,new SelectList(new string[]{"my dad","my mom"}),new {@class="bigger",@style="margin-top:0;height:35px;"})	
+			 <select class="bigger" id="minTransAmount_Bool_OtherVar" ng-model="data.minTransAmount.Bool.OtherVar" style="margin-top:0;height:35px;"><option>my dad</option>
+<option>my mom</option>
+</select>	
 						</div>
 			<div class="upside-form">
 			Amount:
-       		<input type="number" id="minTransAmount_Number" name="minTransAmount.Number" class="bigger">
+       		<input type="number" id="minTransAmount_Number" ng-model="data.minTransAmount.Number" class="bigger">
       		</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.minTransAmount.Bool.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="minTransAmount_Bool_ClauseRef" ng-model="data.minTransAmount.Bool.ClauseRef" type="text"  />
 			</div>	            
 		</div>
 
@@ -1145,12 +1424,12 @@ if(b==true){
 		<div class="sideline">6.8 </div>
 			<p style="margin-left:3%;">Can lenders grant security over their rights</p>
 			<div class="upside-form">
-			<div>@Html.RadioButtonFor(m=>m.LendersGrantSecurOverOwnRight.OtherVar,"Yes")Yes</div>
-			<div>@Html.RadioButtonFor(m=>m.LendersGrantSecurOverOwnRight.OtherVar,"No")No</div>
-			<div>@Html.RadioButtonFor(m=>m.LendersGrantSecurOverOwnRight.OtherVar,"not_stated")Not Stated</div>
+			<div><input id="LendersGrantSecurOverOwnRight_OtherVar" ng-model="data.LendersGrantSecurOverOwnRight.OtherVar" type="radio" value="Yes" />Yes</div>
+			<div><input id="LendersGrantSecurOverOwnRight_OtherVar" ng-model="data.LendersGrantSecurOverOwnRight.OtherVar" type="radio" value="No" />No</div>
+			<div><input id="LendersGrantSecurOverOwnRight_OtherVar" ng-model="data.LendersGrantSecurOverOwnRight.OtherVar" type="radio" value="not_stated" />Not Stated</div>
 			</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.LendersGrantSecurOverOwnRight.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="LendersGrantSecurOverOwnRight_ClauseRef" ng-model="data.LendersGrantSecurOverOwnRight.ClauseRef" type="text"  />
 			</div></div>
 			</div>
 			</div>
@@ -1165,10 +1444,12 @@ if(b==true){
 		 <div class="sideline">7.1 </div>
 			<p style="margin-left:3%;">Permitted interest periods</p>
 			<div class="upside-form" style="width:70%;">
-			 @Html.DropDownListFor(m=>m.PermiteedInterPeriod.OtherVar,new SelectList(new string[]{"my dad","my mom"}),new {@class="bigger",@style="margin-top:0;height:35px;"})	
+			 <select class="bigger" id="PermiteedInterPeriod_OtherVar" ng-model="data.PermiteedInterPeriod.OtherVar" style="margin-top:0;height:35px;"><option>my dad</option>
+<option>my mom</option>
+</select>	
 						</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.PermiteedInterPeriod.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="PermiteedInterPeriod_ClauseRef" ng-model="data.PermiteedInterPeriod.ClauseRef" type="text"  />
 			</div>	            
 			</div>
 
@@ -1178,45 +1459,48 @@ if(b==true){
 										there for non-standard interest<br> 
 										periods (if any):</p>
 			<div class="upside-form">
-			@Html.TextAreaFor(m=>m.ConsentRequirNonStandardInterPeriod.OtherVar,new {@class="bigger",@style="height:100px;"})
+			<textarea class="bigger" cols="20" id="ConsentRequirNonStandardInterPeriod_OtherVar" ng-model="data.ConsentRequirNonStandardInterPeriod.OtherVar" rows="2" style="height:100px;">
+</textarea>
 			</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.ConsentRequirNonStandardInterPeriod.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="ConsentRequirNonStandardInterPeriod_ClauseRef" ng-model="data.ConsentRequirNonStandardInterPeriod.ClauseRef" type="text"  />
 		</div></div>
 		<div  style="height:300px;" class="sec">
 		<div class="sideline">7.3 </div>
 			<p style="margin-left:3%;">Notice period for <br> submitting a utilisation <br> request for sterling</p>
 			<div class="upside-form">
-       		<input type="number" name="NoticePerForSubUtilRequestSterling.OtherVar" id="NoticePerForSubUtilRequestSterling_OtherVar" class="bigger"> 
+       		<input type="number" ng-model="data.NoticePerForSubUtilRequestSterling.OtherVar" id="NoticePerForSubUtilRequestSterling_OtherVar" class="bigger"> 
       		</div>
 			<div class="upside-down">Bussiness Days</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.NoticePerForSubUtilRequestSterling.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="NoticePerForSubUtilRequestSterling_ClauseRef" ng-model="data.NoticePerForSubUtilRequestSterling.ClauseRef" type="text"  />
 			</div>	              
 		</div>
 		<div  style="height:300px;" class="sec">
 		<div class="sideline">7.4 </div>
 			<p style="margin-left:3%;">Notice period for <br> submitting a utilisation <br> request for non-sterling</p>
 			<div class="upside-form">
-			<input type="number" name="NoticePerForSubUtilRequestNonSterling.OtherVar" id="NoticePerForSubUtilRequestNonSterling_OtherVar" class="bigger"> 
+			<input type="number" ng-model="data.NoticePerForSubUtilRequestNonSterling.OtherVar" id="NoticePerForSubUtilRequestNonSterling_OtherVar" class="bigger"> 
       		</div>
 			<div class="upside-down">Bussiness Days</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.NoticePerForSubUtilRequestNonSterling.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="NoticePerForSubUtilRequestNonSterling_ClauseRef" ng-model="data.NoticePerForSubUtilRequestNonSterling.ClauseRef" type="text"  />
 			</div>	              
 		</div>
 		<div  style="height:250px;" class="sec">
 		 <div class="sideline">7.5 </div>
 			<p style="margin-left:3%;">Notice period of repayment of loans</p>
 			<div class="upside-form" style="width:20%;">
-					<input type="number" name="NotePerForRepayLoan.Number" id="NotePerForRepayLoan_Number" class="bigger"> 
+					<input type="number" ng-model="data.NotePerForRepayLoan.Number" id="NotePerForRepayLoan_Number" class="bigger"> 
 		
 						</div>
 			<div class="upside-form">
-       		@Html.DropDownListFor(m=>m.NotePerForRepayLoan.Bool.OtherVar,new SelectList(new string[]{"Buissness Days","Weeks"}),new {@class="bigger",@style=""})	
+       		<select class="bigger" id="NotePerForRepayLoan_Bool_OtherVar" ng-model="data.NotePerForRepayLoan.Bool.OtherVar" style=""><option>Buissness Days</option>
+<option>Weeks</option>
+</select>	
       		</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.NotePerForRepayLoan.Bool.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="NotePerForRepayLoan_Bool_ClauseRef" ng-model="data.NotePerForRepayLoan.Bool.ClauseRef" type="text"  />
 			</div>	            
 
 	</div>
@@ -1224,14 +1508,16 @@ if(b==true){
 		 <div class="sideline">7.6</div>
 			<p style="margin-left:3%;">Notice period of repayment of loans</p>
 			<div class="upside-form" style="width:20%;">
-					<input type="number" name="NotePerForCancelCommit.Number" id="NotePerForCancelCommit_Number" class="bigger"> 
+					<input type="number" ng-model="data.NotePerForCancelCommit.Number" id="NotePerForCancelCommit_Number" class="bigger"> 
 		
 						</div>
 			<div class="upside-form">
-       		@Html.DropDownListFor(m=>m.NotePerForCancelCommit.Bool.OtherVar,new SelectList(new string[]{"Buissness Days","Weeks"}),new {@class="bigger",@style=""})	
+       		<select class="bigger" id="NotePerForCancelCommit_Bool_OtherVar" ng-model="data.NotePerForCancelCommit.Bool.OtherVar" style=""><option>Buissness Days</option>
+<option>Weeks</option>
+</select>	
       		</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.NotePerForCancelCommit.Bool.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="NotePerForCancelCommit_Bool_ClauseRef" ng-model="data.NotePerForCancelCommit.Bool.ClauseRef" type="text"  />
 			</div>	            
 		</div>		
 			</div>
@@ -1248,45 +1534,47 @@ if(b==true){
 		 <div class="sideline">8.1 </div>
 			<p style="margin-left:3%;">What is the initial margin (%)?</p>
 			<div class="upside-form" style="width:20%;">
-			 @Html.DropDownListFor(m=>m.InitPercMargin.Bool.OtherVar,new SelectList(new string[]{"my dad","my mom"}),new {@class="bigger",@style="margin-top:0;height:35px;"})	
+			 <select class="bigger" id="InitPercMargin_Bool_OtherVar" ng-model="data.InitPercMargin.Bool.OtherVar" style="margin-top:0;height:35px;"><option>my dad</option>
+<option>my mom</option>
+</select>	
 						</div>
 
 			<div class="upside-form">
-			<input type="number" name="InitPercMargin.Number" id="InitPercMargin_Number" class="bigger"> 	
+			<input type="number" ng-model="data.InitPercMargin.Number" id="InitPercMargin_Number" class="bigger"> 	
       		</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.InitPercMargin.Bool.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="InitPercMargin_Bool_ClauseRef" ng-model="data.InitPercMargin.Bool.ClauseRef" type="text"  />
 			</div>	            
 		</div>
 			<div  style="height:250px;" class="sec">
 		<div class="sideline">8.2 </div>
 			<p style="margin-left:3%;">Are there commitment fees?</p>
 			<div class="upside-form">
-			<div>@Html.RadioButtonFor(m=>m.AreCommitmentFees.OtherVar,true)Yes</div>
+			<div><input id="AreCommitmentFees_OtherVar" ng-model="data.AreCommitmentFees.OtherVar" type="radio" ng-value="true" />Yes</div>
 
-			@Html.RadioButtonFor(m=>m.AreCommitmentFees.OtherVar,false)No</div>
+			<input id="AreCommitmentFees_OtherVar" ng-model="data.AreCommitmentFees.OtherVar" type="radio" ng-value="false" />No</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.AreCommitmentFees.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="AreCommitmentFees_ClauseRef" ng-model="data.AreCommitmentFees.ClauseRef" type="text"  />
 		</div></div>
 		<div  style="height:250px;" class="sec">
 		<div class="sideline">8.3 </div>
 			<p style="margin-left:3%;">Are there utilisation fees?</p>
 			<div class="upside-form">
-			<div>@Html.RadioButtonFor(m=>m.AreUtilFees.OtherVar,true)Yes</div>
+			<div><input id="AreUtilFees_OtherVar" ng-model="data.AreUtilFees.OtherVar" type="radio" ng-value="true" />Yes</div>
 
-			@Html.RadioButtonFor(m=>m.AreUtilFees.OtherVar,false)No</div>
+			<input id="AreUtilFees_OtherVar" ng-model="data.AreUtilFees.OtherVar" type="radio" ng-value="false" />No</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.AreUtilFees.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="AreUtilFees_ClauseRef" ng-model="data.AreUtilFees.ClauseRef" type="text"  />
 		</div></div>
 		<div  style="height:250px;" class="sec">
 		<div class="sideline">8.4 </div>
 			<p style="margin-left:3%;">Does the margin vary<br> (by references to a margin grid or otherwise)?</p>
 			<div class="upside-form">
-			<div>@Html.RadioButtonFor(m=>m.VaryMargin.OtherVar,true)Yes</div>
+			<div><input id="VaryMargin_OtherVar" ng-model="data.VaryMargin.OtherVar" type="radio" ng-value="true" />Yes</div>
 
-			@Html.RadioButtonFor(m=>m.VaryMargin.OtherVar,false)No</div>
+			<input id="VaryMargin_OtherVar" ng-model="data.VaryMargin.OtherVar" type="radio" ng-value="false" />No</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.VaryMargin.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="VaryMargin_ClauseRef" ng-model="data.VaryMargin.ClauseRef" type="text"  />
 		</div></div>
 			</div>
 
@@ -1301,22 +1589,22 @@ if(b==true){
 			<p style="margin-left:3%;">Does the credit agreement contain
 								<br> a concept of Defaulting Lenders?</p>
 			<div class="upside-form">
-			<div>@Html.RadioButtonFor(m=>m.CreditAgreeContainConcDefaultLenders.OtherVar,true)Yes</div>
+			<div><input id="CreditAgreeContainConcDefaultLenders_OtherVar" ng-model="data.CreditAgreeContainConcDefaultLenders.OtherVar" type="radio" ng-value="true" />Yes</div>
 
-			@Html.RadioButtonFor(m=>m.CreditAgreeContainConcDefaultLenders.OtherVar,false)No</div>
+			<input id="CreditAgreeContainConcDefaultLenders_OtherVar" ng-model="data.CreditAgreeContainConcDefaultLenders.OtherVar" type="radio" ng-value="false" />No</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.CreditAgreeContainConcDefaultLenders.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="CreditAgreeContainConcDefaultLenders_ClauseRef" ng-model="data.CreditAgreeContainConcDefaultLenders.ClauseRef" type="text"  />
 		</div></div>
 		<div  style="height:250px;" class="sec">
 		<div class="sideline">9.2 </div>
 			<p style="margin-left:3%;">Can Obligours set off against money
 								<br>owed to Defaulting Lenders?</p>
 			<div class="upside-form">
-			<div>@Html.RadioButtonFor(m=>m.CanObligorsOffAgainstOwedDefaultLenders.OtherVar,true)Yes</div>
+			<div><input id="CanObligorsOffAgainstOwedDefaultLenders_OtherVar" ng-model="data.CanObligorsOffAgainstOwedDefaultLenders.OtherVar" type="radio" ng-value="true" />Yes</div>
 
-			@Html.RadioButtonFor(m=>m.CanObligorsOffAgainstOwedDefaultLenders.OtherVar,false)No</div>
+			<input id="CanObligorsOffAgainstOwedDefaultLenders_OtherVar" ng-model="data.CanObligorsOffAgainstOwedDefaultLenders.OtherVar" type="radio" ng-value="false" />No</div>
       		<div class="clauseform">
-			@Html.TextBoxFor(m=>m.CanObligorsOffAgainstOwedDefaultLenders.ClauseRef,"",new {@class="bigger"})
+			<input class="bigger" id="CanObligorsOffAgainstOwedDefaultLenders_ClauseRef" ng-model="data.CanObligorsOffAgainstOwedDefaultLenders.ClauseRef" type="text"  />
 		</div></div>
 		</div>
 		</div>
@@ -1329,17 +1617,19 @@ if(b==true){
 			<div class="sideline">10.1 </div>
 			<p style="margin-left:3%;">Types of Agent(eg. Agent, Security Agent) and the Agent Name:</p>
 
-			@Html.TextAreaFor(m=>m.AgentTypes,new {@class="bigger",@style="margin-left:3%;height:250px;"})
+			<textarea class="bigger" cols="20" id="AgentTypes" ng-model="data.AgentTypes" rows="2" style="margin-left:3%;height:250px;">
+</textarea>
 
 			<div class="sideline">10.2 </div>
 			<p style="margin-left:3%;">Brief description of important info not regarded in questions above</p>
 
-			@Html.TextAreaFor(m=>m.OtherInfo,new {@class="bigger",@style="margin-left:3%;height:250px;"})
+			<textarea class="bigger" cols="20" id="OtherInfo" ng-model="data.OtherInfo" rows="2" style="margin-left:3%;height:250px;">
+</textarea>
 
 			<div class="sideline">10.3 </div>
 			<p style="margin-left:3%;">File Name</p>
 
-			@Html.TextBoxFor(m=>m.settings.Docname,new {@class="bigger", @style="margin-left:3%;"})
+			<input class="bigger" id="settings_Docname" ng-model="data.settings.Docname" style="margin-left:3%;" type="text"  />
 
       		</div></div>
 	
@@ -1347,13 +1637,45 @@ if(b==true){
 		</div>
 
 		</div>
+</form>
+</div>
+</div>
+<script type="text/javascript">
+app2.controller("TableController",function($scope,$http){
+	<text>
+	$scope.Bbefore=@Doc;
+	</text>
+	$scope.before=JSON.parse(Bbefore);
+    $scope.data=$scope.before;
+	$scope.num=1;
+	$scope.num2=1;
+	$scope.RemoveRow=function(){
+		$scope.num-=1;
+	};
+	$scope.AddRow=function(){
+		$scope.num+=1;
+	};
+	$scope.range=function(n){
+		return new Array($scope.data.+n);
+	};
+	$scope.range2=function(n){
+		return new Array(n);
+	}
+	$scope.RemoveRow2=function(){
+		$scope.num2-=1;
+	};
+	$scope.AddRow2=function(){
+		$scope.num2+=1;
+	};
+	$scope.alerter=function(){
+		var e =JSON.stringify($scope.data);
 
-		
-	
-	
+		$http({ method: 'POST', url:'/FormMaker/Edit', data:{e:JSON.stringify($scope.data)} });
 
-		
-       
-           
 
-       }
+	};
+
+}
+
+);
+</script>

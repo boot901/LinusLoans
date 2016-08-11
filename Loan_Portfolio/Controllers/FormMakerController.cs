@@ -29,43 +29,47 @@ namespace Loan_Portfolio.Controllers
 
 		[Route("Table")]
 		[HttpPost]
-		public ActionResult Table(DocDetail d) {
-			string date = d.Date;
-			string docname = d.settings.Docname;
-		
+		public ActionResult Table(string e) {
+			JsonSerializerSettings handle = new JsonSerializerSettings();
+			handle.NullValueHandling = NullValueHandling.Ignore;
+			DocDetail d;
+			d = new DocDetail();
+			var objec=JsonConvert.DeserializeObject<object>(e, handle);
+			d = (DocDetail)objec;
 			List<DocDetail> jj;
 			try
 			{
-				 jj = JsonConvert.DeserializeObject<List<DocDetail>>(System.IO.File.ReadAllText(@"\path.json"));
+				jj = JsonConvert.DeserializeObject<List<DocDetail>>(System.IO.File.ReadAllText(@"\path.json"),handle);
 			}
-			catch(Exception e) {
-				 jj = new List<DocDetail>();
+			catch (Exception m)
+			{
+			jj = new List<DocDetail>();
 			}
 			jj.Add(d);
-			string json = JsonConvert.SerializeObject(jj);
+			string json = JsonConvert.SerializeObject(jj,handle);
 			System.IO.File.WriteAllText(@"\path.json", json);
 			return RedirectToAction("Index", "Home");
 		}
 
 		[Route("Edit")]
 		[HttpPost]
-		public ActionResult Edit(DocDetail d)
+		public ActionResult Edit(string e, int id)
 		{
-			string date = d.Date;
-			string docname = d.settings.Docname;
+			//string date = d.Date;
+			//string docname = d.settings.Docname;
 
-			List<DocDetail> jj;
-			try
-			{
-				jj = JsonConvert.DeserializeObject<List<DocDetail>>(System.IO.File.ReadAllText(@"\path.json"));
-			}
-			catch (Exception e)
-			{
-				jj = new List<DocDetail>();
-			}
-			jj.Add(d);
-			string json = JsonConvert.SerializeObject(jj);
-			System.IO.File.WriteAllText(@"\path.json", json);
+			//List<DocDetail> jj;
+			//try
+			//{
+			//	jj = JsonConvert.DeserializeObject<List<DocDetail>>(System.IO.File.ReadAllText(@"\path.json"));
+			//}
+			//catch (Exception e)
+			//{
+			//	jj = new List<DocDetail>();
+			//}
+			//jj.Add(d);
+			//string json = JsonConvert.SerializeObject(jj);
+			//System.IO.File.WriteAllText(@"\path.json", json);
 			return RedirectToAction("Index", "Home");
 		}
 
@@ -122,9 +126,8 @@ namespace Loan_Portfolio.Controllers
 				jj = new List<DocDetail>();
 			}
 			DocDetail d = jj[idNum];
-			ViewData["DocDetail"] = d;
-			string s = d.Security.p1;
-			ViewData["security1"] = s;
+			string json = JsonConvert.SerializeObject(d);
+			ViewData["DocDetail"] = json;
 			return View();
 		}
     }

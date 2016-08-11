@@ -37,10 +37,13 @@ namespace Loan_Portfolio.Models
 	}
 
 
-	public class FacilityModel : CommitmentModel
+	public class FacilityModel
 	{
 		public string Type { get; set; }
 		public string Maturity { get; set; }
+		public string Facility { get; set; }
+		public string Currency { get; set; }
+		public int Amount { get; set; }
 
 	}
 	public class SecurityModel
@@ -283,8 +286,8 @@ namespace Loan_Portfolio.Models
 		{
 			DefaultnoDefault = new List<EventPermit>(2);
 			Common_Venders = new List<bool>(30);
-			Commit = new List<CommitmentModel>(3);
-			Contacts = new List<AOContact>(3);
+			Commit = new List<CommitmentModel>(1);
+			Contacts = new List<AOContact>(1);
 		}
 	}
 }

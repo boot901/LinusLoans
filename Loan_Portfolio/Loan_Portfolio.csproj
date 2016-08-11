@@ -915,6 +915,7 @@
     <Content Include="Scripts\MainController.js" />
     <Content Include="Views\FormMaker\Viewer.cshtml" />
     <Content Include="Views\FormMaker\Editor.cshtml" />
+    <Content Include="Scripts\DocDetail.js" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Scripts\jquery-3.1.0.min.map" />
